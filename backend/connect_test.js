@@ -1,42 +1,20 @@
-const { Pool } = require('pg');
+var pg = require('pg');
+//or native libpq bindings
+//var pg = require('pg').native
 
-const pool = new Pool({
-	user: 'postgres',
-	host: 'localhost',
-	database: 'testdb',
-	password: '123',
-	port: 5432
+//elephantsql
+var conString = "" //Can be found in the Details page
+var client = new pg.Client(conString);
+client.connect(function(err) {
+  if(err) {
+    return console.error('could not connect to postgres', err);
+  }
+  client.query('SELECT NOW() AS "theTime"', function(err, result) {
+    if(err) {
+      return console.error('error running query', err);
+    }
+    console.log(result.rows[0].theTime);
+    // >> output: 2018-08-23T14:02:57.117Z
+    client.end();
+  });
 });
-
-pool.on('error', (err, client) => {
-	console.error('Error: ', err);
-});
-
-var query = `select * from users`;
-//query = `update users set age = 21 where email = 'izay0i@gmail.com';`;
-//query = `delete from users where email = 'izay0i@gmail.com'`;
-
-
-(async () => {
-	try {
-		const client = await pool.connect();
-		const res = await client.query(query);
-
-		console.log("Connected to the database");
-
-		for (let row of res.rows) {
-			console.log(`Email: ${row.email}`);
-			console.log(`Full name: ${row.firstname} ${row.lastname}`);
-			console.log(`Age: ${row.age}`);
-		}
-
-		client.release();
-	}
-	catch (err) {
-		console.error(err);
-	}
-	finally {
-		console.log('Disconnected from the database');
-		pool.end();
-	}
-})();
