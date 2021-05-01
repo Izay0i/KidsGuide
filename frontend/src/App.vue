@@ -3,6 +3,7 @@
 		<Navbar />
 		<Banner />
 		<router-view />
+		<router-view name="carousel" />
 		<Footer />
 	</div>
 </template>

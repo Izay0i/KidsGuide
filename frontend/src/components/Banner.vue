@@ -1,16 +1,27 @@
 <template>
 	<div>
-		<b-img-lazy v-bind:src="require('@/assets/banner.jpg')" fluid-grow alt="Fluid-grow image">	
+		<b-img-lazy 
+			v-bind:src="require(`@/assets/${prop_img}`)" 
+			height="100"
+			fluid-grow 
+			alt="Banner image"
+		>	
 		</b-img-lazy>
 	</div>	
 </template>
 
 <script>
 	export default {
-		name: 'Banner'
+		name: 'Banner',
+		props: {
+			prop_img: {
+				type: String,
+				default: 'banner.jpg'
+			}
+		}
 	};
 </script>
 
-<style>
+<style scoped>
 
 </style>

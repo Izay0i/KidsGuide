@@ -9,7 +9,7 @@
 			</b-button>
 		</b-navbar>
 
-		<b-form-group class="ml-2 mr-auto w-75 shadow-sm">
+		<b-form-group class="shadow-sm">
 			<b-form-input 
 				placeholder="https://picsum.photos/300/300/?image=41" 
 				v-model="card_content.img"
@@ -31,8 +31,6 @@
 
 		<b-button-group class="ml-2 mb-3">
 			<b-button class="mr-3 bg-success border-0 rounded" v-on:click="addPost">Add</b-button>
-			<b-button class="mr-3 bg-warning border-0 rounded" v-on:click="updatePost">Update</b-button>
-			<b-button class="mr-3 bg-danger border-0 rounded" v-on:click="deletePost">Delete</b-button>
 		</b-button-group>
 
 		<b-card-group columns class="m-5" v-if="cards.length">
@@ -67,15 +65,13 @@
 		},
 		methods: {
 			addPost: function() {
-				this.cards.push(this.card_content);
-			},
-			updatePost: function() {
-				console.log("Update");
-			},
-			deletePost: function() {
-				var postTitle = this.card_content.title;
-				const index = this.cards.filter(card => card.title.localeCompare(postTitle)).title;
-				this.cards.splice(index, 1);
+				if (this.isPostImageValid && 
+					this.isPostTitleValid && 
+					this.isPostContentValid) 
+				{
+					this.cards.push(this.card_content);
+				}
+				return null;
 			}
 		},
 		computed: {
@@ -92,6 +88,6 @@
 	};
 </script>
 
-<style>
+<style scoped>
 
 </style>

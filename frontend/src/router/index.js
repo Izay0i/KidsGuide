@@ -2,6 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import AdminDashboard from '@/components/AdminDashboard.vue';
+import LoginForm from '@/components/LoginForm.vue';
+import CardCarousel from '@/components/CardCarousel.vue';
+import Faq from '@/components/Faq.vue';
 
 Vue.use(VueRouter);
 
@@ -11,12 +14,25 @@ const routes = [
 		redirect: '/'
 	},
 	{
-		path: '/'
+		path: '/',
+		components: {
+			carousel: CardCarousel
+		}
+	},
+	{
+		path: '/faq',
+		name: 'Faq',
+		component: Faq
 	},
 	{
 		path: '/admin',
 		name: 'AdminDashboard',
 		component: AdminDashboard
+	},
+	{
+		path: '/login',
+		name: 'LoginForm',
+		component: LoginForm
 	}
 ];
 

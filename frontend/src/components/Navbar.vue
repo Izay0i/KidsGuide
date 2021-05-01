@@ -4,9 +4,9 @@
 			<b-nav pills class="nav-items p-2">
 				<b-nav-item class="home" to="/">Trang chủ</b-nav-item>
 				<b-nav-item>Các kỹ năng khác</b-nav-item>
-				<b-nav-item>FAQ</b-nav-item>
+				<b-nav-item to="faq">FAQ</b-nav-item>
 				<b-nav-item to="admin" v-if="isLogin">Admin</b-nav-item>
-				<b-nav-item class="auth-btn" v-on:click="login">{{ text }}</b-nav-item>
+				<b-nav-item class="auth-btn" v-on:click="login" to="login">{{ text }}</b-nav-item>
 			</b-nav>
 		</b-navbar>
 	</div>
@@ -24,13 +24,13 @@
 		methods: {
 			login: function() {
 				this.isLogin = !this.isLogin;
-				this.text = this.isLogin ? "Đăng xuất" : "Đăng nhập";
+				this.text = this.isLogin ? 'Đăng xuất' : 'Đăng nhập';
 			}
 		}
 	};
 </script>
 
-<style>
+<style scoped>
 	.navbar {
 		background-color: #049dd9;
 	}

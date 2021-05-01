@@ -1,17 +1,28 @@
 <template>
 	<div>
 		<b-card 
-			:title="card_content.title"
-			:img-src="card_content.img"
+			v-bind:title="card_content.title"
+			v-bind:img-src="card_content.img"
 			img-alt="Thumbnail" 
 			img-top
 		>
 			<b-card-text>
 				{{ card_content.content }}
 			</b-card-text>
-			<template #footer>
-				<b-link to="/blog-posts">Xem thêm</b-link>
-			</template>
+			<div class="footer">
+				<b-button 
+					class="mr-3 bg-warning border-0 rounded" 
+					v-on:click="updatePost"
+				>
+					Update
+				</b-button>
+				<b-button 
+					class="mr-3 bg-danger border-0 rounded" 
+					v-on:click="deletePost"
+				>
+					Delete
+				</b-button>
+			</div>
 		</b-card>
 	</div>
 </template>
@@ -41,10 +52,18 @@
 					content: this.prop_content
 				}
 			};
+		},
+		methods: {
+			updatePost: function() {
+				return null;
+			},
+			deletePost: function() {
+				return null;
+			}
 		}
 	};
 </script>
 
-<style>
+<style scoped>
 
 </style>
