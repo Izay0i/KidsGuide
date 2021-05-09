@@ -1,7 +1,9 @@
 <template>
     <div>
         <b-form class="rounded-lg w-75 m-auto p-3 bg-light">
-            <b-form-group
+            <b-avatar rounded src="@/assets/book.png"></b-avatar>
+			
+			<b-form-group
                 label="Email:"
                 class="text-info"
             >

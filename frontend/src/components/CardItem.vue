@@ -9,18 +9,19 @@
 			<b-card-text>
 				{{ card_content.content }}
 			</b-card-text>
+			
 			<div class="footer">
 				<b-button 
 					class="mr-3 bg-warning border-0 rounded" 
 					v-on:click="updatePost"
 				>
-					Update
+					Sửa
 				</b-button>
 				<b-button 
 					class="mr-3 bg-danger border-0 rounded" 
 					v-on:click="deletePost"
 				>
-					Delete
+					Xóa
 				</b-button>
 			</div>
 		</b-card>
@@ -58,7 +59,8 @@
 				return null;
 			},
 			deletePost: function() {
-				return null;
+				//calling delete-card event from AdminDashboard.vue with a value of this.prop_title
+				this.$emit('delete-card', this.prop_title);
 			}
 		}
 	};
