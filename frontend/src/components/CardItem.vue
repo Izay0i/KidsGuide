@@ -2,7 +2,7 @@
 	<div>
 		<b-card 
 			v-bind:title="card_content.title"
-			v-bind:img-src="card_content.img"
+			v-bind:img-src="card_content.banner"
 			img-alt="Thumbnail" 
 			img-top
 		>
@@ -32,7 +32,11 @@
 	export default {
 		name: 'CardItem',
 		props: {
-			prop_img: {
+			prop_id: {
+				type: Number,
+				required: true
+			},
+			prop_banner: {
 				type: String,
 				required: true
 			},
@@ -48,7 +52,8 @@
 		data: function() {
 			return {
 				card_content: {
-					img: this.prop_img,
+					id: this.prop_id,
+					banner: this.prop_banner,
 					title: this.prop_title,
 					content: this.prop_content
 				}
@@ -59,8 +64,8 @@
 				return null;
 			},
 			deletePost: function() {
-				//calling delete-card event from AdminDashboard.vue with a value of this.prop_title
-				this.$emit('delete-card', this.prop_title);
+				//calling delete-card event from AdminDashboard.vue with a value of this.id
+				this.$emit('delete-card', this.id);
 			}
 		}
 	};

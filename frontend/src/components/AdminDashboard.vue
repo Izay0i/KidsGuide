@@ -10,7 +10,7 @@
 			<b-form-group class="shadow-sm">
 				<b-form-input 
 					placeholder="https://picsum.photos/300/300/?image=41" 
-					v-model="card_content.img"
+					v-model="card_content.banner"
 					v-bind:state="isPostImageValid"
 				></b-form-input>
 
@@ -30,7 +30,7 @@
 			</b-form-group>
 
 			<b-button-group class="mb-3">
-				<b-button class="mr-3 bg-success border-0 rounded" v-on:click="addPost">Thêm</b-button>
+				<b-button class="mr-3 bg-success border-0 rounded" v-on:click="addBlogPost">Thêm</b-button>
 			</b-button-group>
 
 			<div class="search-post">
@@ -42,12 +42,13 @@
 
 			<b-card-group columns class="m-5" v-if="cards.length">
 				<CardItem 
-					v-for="(card, index) in cards" 
-					v-bind:key="index" 
-					v-bind:prop_img="card.img" 
+					v-for="card in cards" 
+					v-bind:key="card.id"
+					v-bind:prop_id="card.id" 
+					v-bind:prop_banner="card.banner" 
 					v-bind:prop_title="card.title" 
 					v-bind:prop_content="card.content"
-					v-on:delete-card="deletePost"
+					v-on:delete-card="deleteBlogPost"
 				/>			
 			</b-card-group>
 		</div>
@@ -93,6 +94,7 @@
 					v-bind:prop_id="faq.id"
 					v-bind:prop_question="faq.body.question"
 					v-bind:prop_answer="faq.body.answer"
+					v-on:update-faq="updateFaq"
 					v-on:delete-faq="deleteFaq"
 				/>
 			</b-card-group>
@@ -104,6 +106,7 @@
 	import CardItem from '@/components/CardItem.vue';
 	import FaqItem from '@/components/FaqItem.vue';
 
+	import PostService from '@/services/PostService.js';
 	import FaqService from '@/services/FaqService.js';
 
 	export default {
@@ -118,12 +121,14 @@
 					blog: '',
 					faq: ''
 				},
+
 				card_content: {
-					img: '',
+					banner: '',
 					title: '',
 					content: ''
 				},
 				cards: [],
+				
 				faq_content: {
 					question: '',
 					answer: ''
@@ -133,19 +138,64 @@
 		},
 		created: function() {
 			this.getFaqs();
+			this.getBlogPosts();
 		},
 		methods: {
-			addPost: function() {
+			getBlogPosts: async function() {
+				PostService.getBlogPosts()
+				.then(response => {
+					this.cards = response;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			getBlogPostByTitle: async function() {
+				if (!this.isSearchItemBlogValid) {
+					this.getBlogPosts();
+					return;
+				}
+
+				PostService.getBlogPostByTitle(this.search_item.blog)
+				.then(response => {
+					this.cards = response;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			addBlogPost: function() {
 				if (!this.isPostImageValid || 
 					!this.isPostTitleValid || 
 					!this.isPostContentValid) 
 				{
 					return;
 				}
-				this.cards.push(this.card_content);
+				
+				const payload = JSON.stringify({
+					"title": this.card_content.title,
+					"content": this.card_content.content,
+					"banner": this.card_content.banner
+				});
+
+				PostService.createBlogPost(payload)
+				.then(response => {
+					console.log(response);
+					this.getBlogPosts();
+				})
+				.catch(error => {
+					console.log(error);
+				});
 			},
-			deletePost: function(post_title) {
-				this.cards.splice(this.cards.indexOf(post_title), 1);
+			deleteBlogPost: function(id) {
+				PostService.deleteBlogPost(id)
+				.then(response => {
+					console.log(response);
+					this.getBlogPosts();
+				})
+				.catch(error => {
+					console.log(error);
+				});
 			},
 
 			getFaqs: async function() {
@@ -190,6 +240,9 @@
 					console.log(error);
 				});
 			},
+			updateFaq: async function(id) {
+				console.log(id);
+			},
 			deleteFaq: async function(id) {
 				FaqService.deleteFaq(id)
 				.then(response => {
@@ -210,7 +263,7 @@
 			},
 
 			isPostImageValid: function() {
-				return this.card_content.img.length ? true : false;
+				return this.card_content.banner.length ? true : false;
 			},
 			isPostTitleValid: function() {
 				return this.card_content.title.length ? true : false;

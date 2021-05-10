@@ -1,11 +1,15 @@
 <template>
 	<div>
-		<b-card class="m-1" v-bind:title="faq_content.question">
+		<b-card 
+			class="m-1" 
+			v-bind:title="faq_content.question"
+		>
 			<b-card-text>{{ faq_content.answer }}</b-card-text>
 
 			<div class="footer">
 				<b-button
 					class="mr-3 bg-warning border-0 rounded"
+					v-on:click="updateFaq"
 				>
 					Sửa
 				</b-button>
@@ -48,6 +52,9 @@
 			};
 		},
 		methods: {
+			updateFaq: function() {
+				this.$emit('update-faq', this.id);
+			},
 			deleteFaq: function() {
 				this.$emit('delete-faq', this.id);
 			}

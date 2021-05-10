@@ -1,22 +1,8 @@
-const Pool = require('pg').Pool;
-const pool = new Pool({
-	user: 'postgres',
-	host: 'localhost',
-	database: 'kids_guide',
-	password: '123',
-	port: 5432
-});
-
-/*or use a connection string (ElephantSQL) 
-const connectionString = 'URL';
-const pool = new Pool({
-	connectionString
-});
-*/
+const pool = require('../db-connection.js');
 
 const getFaqs = (request, response) => {
 	pool.query(
-		'select * from faq order by id asc;',
+		'select * from faq;',
 		(error, results) => {
 			if (error) throw error;
 
@@ -26,7 +12,7 @@ const getFaqs = (request, response) => {
 };
 
 const getFaqByID = (request, response) => {
-	const id = request.params.id;
+	const id = parseInt(request.params.id);
 
 	pool.query(
 		'select * from faq where id = $1;',
@@ -37,7 +23,7 @@ const getFaqByID = (request, response) => {
 			response.status(200).json(results.rows);
 		}
 	);
-}
+};
 
 const getFaqByQuestion = (request, response) => {
 	const question = request.query.question[0];
@@ -62,7 +48,7 @@ const createFaq = (request, response) => {
 		(error, results) => {
 			if (error) throw error;
 
-			response.status(201).send(`Faq add with ID: ${results.rows[0].id}`);
+			response.status(201).send(`Faq added with ID: ${results.rows[0].id}`);
 		}
 	);
 };
@@ -79,7 +65,7 @@ const deleteFaq = (request, response) => {
 			response.status(200).send(`Faq deleted with ID: ${id}`);
 		}
 	);
-}
+};
 
 module.exports = {
 	getFaqs,
