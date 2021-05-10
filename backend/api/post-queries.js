@@ -4,7 +4,9 @@ const getBlogPosts = (response, request) => {
 	pool.query(
 		'select * from test_blog;',
 		(error, results) => {
-			if (error) throw error;
+			if (error) {
+				return console.error('Error executing query', error.stack);
+			}
 
 			response.status(200).json(results.rows);
 		}
