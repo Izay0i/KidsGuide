@@ -51,8 +51,8 @@
 		},
 		data: function() {
 			return {
+				id: this.prop_id,
 				card_content: {
-					id: this.prop_id,
 					banner: this.prop_banner,
 					title: this.prop_title,
 					content: this.prop_content
@@ -61,7 +61,7 @@
 		},
 		methods: {
 			updatePost: function() {
-				return null;
+				this.$emit('update-card', this.id);
 			},
 			deletePost: function() {
 				//calling delete-card event from AdminDashboard.vue with a value of this.id

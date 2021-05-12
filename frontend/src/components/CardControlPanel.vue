@@ -29,9 +29,13 @@
 
 		<div class="search-post">
 			<b-button>
-				<b-icon icon="search"></b-icon>
+				<b-icon icon="search" v-on:click="getBlogPostByTitle"></b-icon>
 			</b-button>
-			<b-form-input placeholder="Tìm bài viết"></b-form-input>
+			<b-form-input 
+				placeholder="Tìm bài viết"
+				v-model="search_blog"
+				v-on:keyup="getBlogPostByTitle"
+			></b-form-input>
 		</div>
 
 		<b-card-group columns class="m-5" v-if="cards.length">
@@ -42,6 +46,7 @@
 				v-bind:prop_banner="card.banner" 
 				v-bind:prop_title="card.title" 
 				v-bind:prop_content="card.content"
+				v-on:update-card="updateBlogPost"
 				v-on:delete-card="deleteBlogPost"
 			/>			
 		</b-card-group>
@@ -70,7 +75,7 @@
 			};
 		},
 		created: function() {
-			//this.getBlogPosts();
+			this.getBlogPosts();
 		},
 		methods: {
 			getBlogPosts: async function() {
@@ -119,6 +124,9 @@
 					console.log(error);
 				});
 			},
+			updateBlogPost: function(id) {
+				console.log(id);	
+			},
 			deleteBlogPost: function(id) {
 				PostService.deleteBlogPost(id)
 				.then(response => {
@@ -160,7 +168,7 @@
 
 	.blog-group {
 		overflow-y: auto;
-		height: 30rem;
+		height: 50rem;
 		border: 2px solid white;
 		border-radius: 5px;
 		padding: 15px;

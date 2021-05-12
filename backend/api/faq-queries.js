@@ -5,7 +5,7 @@ const getFaqs = (request, response) => {
 		'select * from faq;',
 		(error, results) => {
 			if (error) throw error;
-
+			
 			response.status(200).json(results.rows);
 		}
 	);

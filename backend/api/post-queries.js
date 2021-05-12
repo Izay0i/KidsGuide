@@ -1,19 +1,17 @@
 const pool = require('../db-connection.js');
 
-const getBlogPosts = (response, request) => {
+const getBlogPosts = (request, response) => {
 	pool.query(
 		'select * from test_blog;',
 		(error, results) => {
-			if (error) {
-				return console.error('Error executing query', error.stack);
-			}
+			if (error) throw error;
 
-			response.status(200).json(results.rows);
+			response.send(results.rows);
 		}
 	);
 };
 
-const getBlogPostByID = (response, request) => {
+const getBlogPostByID = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
@@ -27,7 +25,7 @@ const getBlogPostByID = (response, request) => {
 	);
 };
 
-const getBlogPostByTitle = (response, request) => {
+const getBlogPostByTitle = (request, response) => {
 	const title = request.query.title[0];
 	
 	pool.query(
@@ -41,7 +39,7 @@ const getBlogPostByTitle = (response, request) => {
 	);
 };
 
-const createBlogPost = (response, request) => {
+const createBlogPost = (request, response) => {
 	const { title, content, banner } = request.body;
 
 	pool.query(
@@ -55,7 +53,7 @@ const createBlogPost = (response, request) => {
 	);
 };
 
-const deleteBlogPost = (response, request) => {
+const deleteBlogPost = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
