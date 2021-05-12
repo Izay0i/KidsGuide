@@ -141,8 +141,13 @@
 
 <style scoped>
 	p {
-		color: goldenrod;
+		display: inline-block;
+		width: auto;
+		background-color: goldenrod;
+		color: white;
 		font-size: 30px;
+		border-radius: 8px;
+		padding: 8px;
 	}
 
 	.faq-group {

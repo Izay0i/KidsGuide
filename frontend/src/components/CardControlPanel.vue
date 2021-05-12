@@ -1,7 +1,7 @@
 <template>
 	<div class="blog-group w-75 m-auto shadow-lg">
 		<p>Bài viết</p>
-			
+
 		<b-form-group class="shadow-sm">
 			<b-form-input 
 				placeholder="https://picsum.photos/300/300/?image=41" 
@@ -149,8 +149,13 @@
 
 <style scoped>
 	p {
-		color: goldenrod;
+		display: inline-block;
+		width: auto;
+		background-color: goldenrod;
+		color: white;
 		font-size: 30px;
+		border-radius: 8px;
+		padding: 8px;
 	}
 
 	.blog-group {
