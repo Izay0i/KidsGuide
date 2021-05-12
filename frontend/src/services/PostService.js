@@ -2,11 +2,11 @@ import http from '@/http-common';
 
 export default {
 	async getBlogPosts() {
-		let response = await http.get('blogs');
+		let response = await http.get('posts');
 		return response.data;
 	},
 	async getBlogPostByTitle(payload) {
-		let response = await http.get('blog', {
+		let response = await http.get('posts/post', {
 			params: {
 				title: payload
 			}
@@ -14,11 +14,11 @@ export default {
 		return response.data;
 	},
 	async createBlogPost(body) {
-		let response = await http.post('blogs', body);
+		let response = await http.post('posts', body);
 		return response.data;
 	},
 	async deleteBlogPost(id) {
-		let response = await http.delete(`blog/${id}`);
+		let response = await http.delete(`posts/post/${id}`);
 		return response.data;
 	}
 };
