@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import AdminDashboard from '@/components/AdminDashboard.vue';
-import LoginForm from '@/components/LoginForm.vue';
+import AuthForm from '@/components/AuthForm.vue';
 import CardCarousel from '@/components/CardCarousel.vue';
 import Faq from '@/components/Faq.vue';
 
@@ -30,9 +30,9 @@ const routes = [
 		component: AdminDashboard
 	},
 	{
-		path: '/login',
-		name: 'LoginForm',
-		component: LoginForm
+		path: '/auth',
+		name: 'AuthForm',
+		component: AuthForm
 	}
 ];
 

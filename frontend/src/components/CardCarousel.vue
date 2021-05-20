@@ -4,7 +4,6 @@
 
         <b-carousel
             id="carousel-1"
-            v-model="slide"
             v-bind:interval="4000"
             controls
             indicators

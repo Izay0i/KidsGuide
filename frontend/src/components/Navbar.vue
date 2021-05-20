@@ -6,7 +6,7 @@
 				<b-nav-item>Các kỹ năng</b-nav-item>
 				<b-nav-item to="faqs">FAQ</b-nav-item>
 				<b-nav-item to="admin" v-if="isLogin">Admin</b-nav-item>
-				<b-nav-item class="auth-btn" v-on:click="login" to="login">{{ text }}</b-nav-item>
+				<b-nav-item class="auth-btn" v-on:click="login" to="auth">{{ text }}</b-nav-item>
 			</b-nav>
 		</b-navbar>
 	</div>
