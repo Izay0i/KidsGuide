@@ -2,7 +2,7 @@ const pool = require('../db-connection.js');
 
 const getFaqs = (request, response) => {
 	pool.query(
-		'select * from faq;',
+		'select * from FAQs;',
 		(error, results) => {
 			if (error) throw error;
 			
@@ -15,7 +15,7 @@ const getFaqByID = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
-		'select * from faq where id = $1;',
+		'select * from FAQs where faq_id = $1;',
 		[id],
 		(error, results) => {
 			if (error) throw error;
@@ -29,7 +29,7 @@ const getFaqByQuestion = (request, response) => {
 	const question = request.query.question[0];
 
 	pool.query(
-		`select * from faq where body->>'question' like $1 || '%';`,
+		`select * from FAQs where body->>'question' like $1 || '%';`,
 		[question],
 		(error, results) => {
 			if (error) throw error;
@@ -43,7 +43,7 @@ const createFaq = (request, response) => {
 	const body = request.body;
 
 	pool.query(
-		'insert into faq (body) values ($1) returning id;',
+		'insert into FAQs (body) values ($1) returning faq_id;',
 		[body],
 		(error, results) => {
 			if (error) throw error;
@@ -57,7 +57,7 @@ const deleteFaq = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
-		'delete from faq where id = $1;',
+		'delete from FAQs where faq_id = $1;',
 		[id],
 		(error, results) => {
 			if (error) throw error;

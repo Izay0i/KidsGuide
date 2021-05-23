@@ -2,11 +2,11 @@
 	<div>
 		<b-navbar class="header">
 			<b-nav pills class="nav-items p-2">
-				<b-nav-item class="home" to="/">Trang chủ</b-nav-item>
+				<b-nav-item class="home" to="/home">Trang chủ</b-nav-item>
 				<b-nav-item>Các kỹ năng</b-nav-item>
-				<b-nav-item to="faqs">FAQ</b-nav-item>
-				<b-nav-item to="admin" v-if="isLogin">Admin</b-nav-item>
-				<b-nav-item class="auth-btn" v-on:click="login" to="auth">{{ text }}</b-nav-item>
+				<b-nav-item to="/faqs">FAQ</b-nav-item>
+				<b-nav-item to="/admin" v-if="isLogin">Admin</b-nav-item>
+				<b-nav-item class="auth-btn" to="/auth">{{ text }}</b-nav-item>
 			</b-nav>
 		</b-navbar>
 	</div>
@@ -20,12 +20,6 @@
 				isLogin: false,
 				text: 'Đăng nhập'
 			};
-		},
-		methods: {
-			login: function() {
-				this.isLogin = !this.isLogin;
-				this.text = this.isLogin ? 'Đăng xuất' : 'Đăng nhập';
-			}
 		}
 	};
 </script>
@@ -54,7 +48,7 @@
 
 	.auth-btn {
 		border-radius: 20px;
-		background-color: #4ABFD9;
+		background-color: #4abfd9;
 	}
 
 	.auth-btn a:hover {

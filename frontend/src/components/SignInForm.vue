@@ -19,12 +19,22 @@
 			</b-form-group>
 
 			<b-form-checkbox>Nhớ tài khoản</b-form-checkbox>
-			<b-button type="submit" variant="primary" class="mt-2">Đăng nhập</b-button>
+			<b-button  
+				variant="success" 
+				class="mt-2"
+				v-on:click="signIn"
+			>
+				Đăng nhập
+			</b-button>
 		</b-form>
 	</div>
 </template>
 
 <script>
+	import router from '@/router';
+
+	import AuthService from '@/services/AuthService';
+
 	export default {
 		name: 'SignInForm',
 		data: function() {
@@ -34,6 +44,25 @@
 					password: ''
 				}
 			};
+		},
+		methods: {
+			signIn: async function() {
+				const payload = JSON.stringify({
+					email: this.signin.email,
+					password: this.signin.password
+				});
+
+				AuthService.signIn(payload)
+				.then(response => {
+					//success
+					localStorage.setItem('user', JSON.stringify(response));
+					router.push('/home');
+				})
+				.catch(error => {
+					console.log(error);
+					router.push('/home');
+				});
+			}
 		}
 	}
 </script>

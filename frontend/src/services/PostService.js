@@ -13,8 +13,8 @@ export default {
 		});
 		return response.data;
 	},
-	async createBlogPost(body) {
-		let response = await http.post('posts', body);
+	async createBlogPost(payload) {
+		let response = await http.post('posts', payload);
 		return response.data;
 	},
 	async deleteBlogPost(id) {

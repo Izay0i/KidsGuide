@@ -1,21 +1,19 @@
 <template>
-    <div>
-        <div class="auth-form">
-			<div class="body">
-				<img src="@/assets/kids_banner.jpg" class="banner"/>
+    <div class="auth-form">
+        <div class="body">
+			<img src="@/assets/auth_banner.png" class="banner"/>
 				
-				<b-card no-body class="shadow-lg">
-					<b-tabs card class="tabs">
-						<b-tab
-							v-for="tab in tabs"
-							v-bind:key="tab.title"
-							v-bind:title="tab.title"
-						>
-							<component v-bind:is="tab.component"></component>
-						</b-tab>
-					</b-tabs>
-				</b-card>
-			</div>
+			<b-card no-body class="shadow-lg">
+				<b-tabs justified card class="tabs">
+					<b-tab
+						v-for="tab in tabs"
+						v-bind:key="tab.title"
+						v-bind:title="tab.title"
+					>
+						<component v-bind:is="tab.component"></component>
+					</b-tab>
+				</b-tabs>
+			</b-card>
 		</div>
     </div>
 </template>
@@ -26,10 +24,6 @@
 
     export default {
         name: 'AuthForm',
-		components: {
-			SignInForm,
-			SignUpForm
-		},
 		data: function() {
 			return {
 				tabs: [
