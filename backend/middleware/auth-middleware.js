@@ -18,12 +18,12 @@ function verifyToken(request, response, next) {
 			return response.sendStatus(401);
 		}
 
-		request.uid = decoded.uid;
+		//request.uid = decoded.uid;
 		next();
 	});
 }
 
-function verifySignUp(request, response, next) {
+function veritfyEmail(request, response, next) {
 	const { email } = request.body;
 
 	pool.query(
@@ -45,5 +45,5 @@ function verifySignUp(request, response, next) {
 
 module.exports = {
 	verifyToken,
-	verifySignUp
+	veritfyEmail
 };

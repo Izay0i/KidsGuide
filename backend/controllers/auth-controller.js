@@ -6,27 +6,41 @@ const pool = require('../db-connection.js');
 const signUp = (request, response) => {
 	const saltRounds = 10;
 	const { name, address, phone, email, password } = request.body;
-	let userID;
+	let userID, userRole;
 
 	(async () => {
 		const client = await pool.connect();
 		try {
 			let results = await client.query(
-				'insert into users (email, password) values ($1, $2) returning uid;',
+				'insert into users (email, password) values ($1, $2) returning uid, role;',
 				[email, bcrypt.hashSync(password, saltRounds)]
 			);
 
 			userID = parseInt(results.rows[0].uid);
+			userRole = results.rows[0].role;
 
 			//should I use a trigger here
 			results = await client.query(
 				'insert into userdetails (uid, name, address, phone_numb) values ($1, $2, $3, $4);',
 				[userID, name, address, phone]
 			);
+
+			//create a token and send it back to the client
+			const token = jwt.sign(
+				{ uid: userID },
+				process.env.SECRET_KEY
+			);
+
+			response.status(201).send({
+				uid: userID,
+				role: userRole,
+				email: email,
+				avatar: '',
+				accessToken: token
+			});
 		}
 		finally {
 			client.release();
-			response.status(201).send('User and details added to database.');
 		}
 	})().catch(error => console.log(error.stack));
 };
@@ -35,7 +49,10 @@ const signIn = (request, response) => {
 	const { email, password } = request.body;
 
 	pool.query(
-		'select * from users where email = $1;',
+		`select users.uid, email, password, role, avatar from users 
+		join userdetails 
+		on users.uid = userdetails.uid 
+		where email = $1;`,
 		[email],
 		(error, results) => {
 			if (error) throw error;
@@ -50,16 +67,17 @@ const signIn = (request, response) => {
 				return response.sendStatus(401);
 			}
 
-			let token = jwt.sign(
+			//ditto
+			const token = jwt.sign(
 				{ uid: results.rows[0].uid }, 
-				process.env.SECRET_KEY, 
-				{ expiresIn: 86400 } //24 hours
+				process.env.SECRET_KEY
 			);
 
 			response.status(200).send({
 				uid: results.rows[0].uid,
 				role: results.rows[0].role,
 				email: email,
+				avatar: results.rows[0].avatar,
 				accessToken: token
 			});
 		}

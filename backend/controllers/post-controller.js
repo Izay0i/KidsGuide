@@ -2,7 +2,7 @@ const pool = require('../db-connection.js');
 
 const getBlogPosts = (request, response) => {
 	pool.query(
-		'select * from test_blog;',
+		'select * from posts;',
 		(error, results) => {
 			if (error) throw error;
 
@@ -15,7 +15,7 @@ const getBlogPostByID = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
-		'select * from test_blog where id = $1;',
+		'select * from posts where post_id = $1;',
 		[id],
 		(error, results) => {
 			if (error) throw error;
@@ -29,7 +29,7 @@ const getBlogPostByTitle = (request, response) => {
 	const title = request.query.title[0];
 	
 	pool.query(
-		`select * from test_blog where title like $1 || '%';`,
+		`select * from posts where title like $1 || '%';`,
 		[title],
 		(error, results) => {
 			if (error) throw error;
@@ -40,15 +40,15 @@ const getBlogPostByTitle = (request, response) => {
 };
 
 const createBlogPost = (request, response) => {
-	const { title, content, banner } = request.body;
+	const { title, content, thumbnail } = request.body;
 
 	pool.query(
-		'insert into test_blog (title, content, banner) values ($1, $2, $3) returning id;',
-		[title, content, banner],
+		'insert into posts (title, content, thumbnail) values ($1, $2, $3) returning post_id;',
+		[title, content, thumbnail],
 		(error, results) => {
 			if (error) throw error;
 
-			response.status(201).send(`Blog added with ID: ${results.rows[0].id}`);
+			response.status(201).send(`Blog added with ID: ${results.rows[0].post_id}`);
 		}
 	);
 };
@@ -57,7 +57,7 @@ const deleteBlogPost = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
-		'delete from test_blog where id = $1;',
+		'delete from posts where post_id = $1;',
 		[id],
 		(error, results) => {
 			if (error) throw error;

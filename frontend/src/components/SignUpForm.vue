@@ -46,6 +46,7 @@
 					type="password" 
 					required
 					v-model="signup.repass"
+					v-bind:invalid-feedback="verifyPassword"
 				></b-form-input>
 			</b-form-group>
 
@@ -80,6 +81,18 @@
 		},
 		methods: {
 			signUp: async function() {
+				//required is not working so... validation checking is mandatory
+				if (!this.signup.name.length ||
+					!this.signup.address.length ||
+					!this.signup.address.length ||
+					!this.signup.phone.length ||
+					!this.signup.email.length ||
+					!this.signup.password.length ||
+					!this.signup.repass.length) 
+				{
+					return
+				}
+
 				const payload = JSON.stringify({
 					name: this.signup.name,
 					address: this.signup.address,
@@ -90,12 +103,25 @@
 
 				AuthService.signUp(payload)
 				.then(response => {
-					console.log(response);
+					this.$store.dispatch('setAuth', true);
+					localStorage.setItem('user', JSON.stringify(response));
 					router.push('/home');
+					router.go(0);
 				})
 				.catch(error => {
-					console.log(error, 'No bueno.');
+					console.log(error);
 				})
+			}
+		},
+		computed: {
+			verifyPassword: function() {
+				if (this.signup.repass) {
+					return 'Mật khẩu không được để trống';
+				}
+				else if (this.signup.repass.localeCompare(this.signup.password) !== 0) {
+					return 'Sai mật khẩu';
+				}
+				return '';
 			}
 		}
 	}

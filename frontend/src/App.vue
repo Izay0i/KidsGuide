@@ -21,6 +21,21 @@
 			Banner,
 			//Card,
 			Footer
+		},
+		mounted: function() {
+			const user = JSON.parse(localStorage.getItem('user'));
+
+			if (user == null) {
+				this.$store.dispatch('setAuth', false);
+			}
+			else {
+				this.$store.dispatch('setAuth', true);
+				this.$store.dispatch('setAvatar', user.avatar);
+
+				if (user.role.localeCompare('superuser') == 0) {
+					this.$store.dispatch('setAdmin', true);
+				}
+			}
 		}
 	};
 </script>

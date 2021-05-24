@@ -2,7 +2,7 @@ const pool = require('../db-connection.js');
 
 const getFaqs = (request, response) => {
 	pool.query(
-		'select * from FAQs;',
+		'select * from faqs;',
 		(error, results) => {
 			if (error) throw error;
 			
@@ -15,7 +15,7 @@ const getFaqByID = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
-		'select * from FAQs where faq_id = $1;',
+		'select * from faqs where faq_id = $1;',
 		[id],
 		(error, results) => {
 			if (error) throw error;
@@ -29,7 +29,7 @@ const getFaqByQuestion = (request, response) => {
 	const question = request.query.question[0];
 
 	pool.query(
-		`select * from FAQs where body->>'question' like $1 || '%';`,
+		`select * from faqs where body->>'question' like $1 || '%';`,
 		[question],
 		(error, results) => {
 			if (error) throw error;
@@ -43,12 +43,12 @@ const createFaq = (request, response) => {
 	const body = request.body;
 
 	pool.query(
-		'insert into FAQs (body) values ($1) returning faq_id;',
+		'insert into faqs (body) values ($1) returning faq_id;',
 		[body],
 		(error, results) => {
 			if (error) throw error;
 
-			response.status(201).send(`Faq added with ID: ${results.rows[0].id}`);
+			response.status(201).send(`Faq added with ID: ${results.rows[0].faq_id}`);
 		}
 	);
 };
@@ -57,7 +57,7 @@ const deleteFaq = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
-		'delete from FAQs where faq_id = $1;',
+		'delete from faqs where faq_id = $1;',
 		[id],
 		(error, results) => {
 			if (error) throw error;

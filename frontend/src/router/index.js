@@ -16,6 +16,7 @@ const routes = [
 	},
 	{
 		path: '/home',
+		name: 'Home',
 		components: {
 			carousel: CardCarousel
 		}
@@ -28,12 +29,19 @@ const routes = [
 	{
 		path: '/admin',
 		name: 'AdminDashboard',
-		component: AdminDashboard
+		component: AdminDashboard,
+		meta: {
+			requiresAuth: true,
+			adminPermission: true
+		}
 	},
 	{
 		path: '/user/:id',
 		name: 'UserProfile',
-		component: UserProfile
+		component: UserProfile,
+		meta: {
+			requiresAuth: true
+		}
 	},
 	{
 		path: '/auth',
@@ -48,16 +56,31 @@ const router = new VueRouter({
 	routes
 });
 
+//https://www.digitalocean.com/community/tutorials/how-to-set-up-vue-js-authentication-and-route-handling-using-vue-router
+
 router.beforeEach((to, from, next) => {
-	const publicPages = ['/home'];
-	const authRequired = !publicPages.includes(to.path);
-	const loggedIn = localStorage.getItem('user');
-
-	if (authRequired && !loggedIn) {
-		return next('/home');
+	if (to.matched.some(record => record.meta.requiresAuth)) {
+		if (localStorage.getItem('user') == null) {
+			next({ name: 'Home' });
+		}
+		else {
+			const user = JSON.parse(localStorage.getItem('user'));
+			if (to.matched.some(record => record.meta.adminPermission)) {
+				if (user.role.localeCompare('superuser') == 0) {
+					next();
+				}
+				else {
+					next({ name: 'Home' });
+				}
+			}
+			else {
+				next();
+			}
+		}
 	}
-
-	next();
+	else {
+		next();
+	}
 });
 
 export default router;

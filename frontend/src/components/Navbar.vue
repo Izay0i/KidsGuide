@@ -1,25 +1,50 @@
 <template>
 	<div>
 		<b-navbar class="header">
-			<b-nav pills class="nav-items p-2">
+			<b-nav pills class="nav-items">
 				<b-nav-item class="home" to="/home">Trang chủ</b-nav-item>
 				<b-nav-item>Các kỹ năng</b-nav-item>
 				<b-nav-item to="/faqs">FAQ</b-nav-item>
-				<b-nav-item to="/admin" v-if="isLogin">Admin</b-nav-item>
-				<b-nav-item class="auth-btn" to="/auth">{{ text }}</b-nav-item>
+				<b-nav-item to="/admin" v-if="isAdmin">Admin</b-nav-item>
+				<b-nav-item class="auth-btn" to="/auth" v-if="!authenticated">Đăng nhập</b-nav-item>
+				<b-avatar 
+					class="profile-btn" 
+					v-bind:to="{ name: 'UserProfile', params: { id: userID } }" 
+					v-bind:src="avatar" 
+					v-if="authenticated"
+				></b-avatar>
 			</b-nav>
 		</b-navbar>
 	</div>
 </template>
 
 <script>
+	import { mapGetters } from 'vuex';
+
 	export default {
 		name: 'Navbar',
 		data: function() {
 			return {
-				isLogin: false,
-				text: 'Đăng nhập'
+				userID: -1
 			};
+		},
+		mounted: function() {
+			this.getUserID();
+		},
+		methods: {
+			getUserID: function() {
+				const user = JSON.parse(localStorage.getItem('user'));
+				if (user != null) {
+					this.userID = user.uid;
+				}
+			}
+		},
+		computed: {
+			...mapGetters({
+				authenticated: 'isAuthenticated',
+				isAdmin: 'isAdmin',
+				avatar: 'getAvatar'
+			})
 		}
 	};
 </script>
@@ -29,11 +54,16 @@
 		background-color: #049dd9;
 	}
 
-	.nav-item a {
+	.nav-items {
+		width: 100%;
+		padding: 10px;
+	}
+
+	.nav-items a {
 		color: white;
 	}
 
-	.nav-item a:hover {
+	.nav-items a:hover {
 		color: #04d9b2;
 	}
 
@@ -47,11 +77,16 @@
 	}
 
 	.auth-btn {
+		margin-left: auto;
 		border-radius: 20px;
 		background-color: #4abfd9;
 	}
 
 	.auth-btn a:hover {
 		color: #f2bc57;
+	}
+
+	.profile-btn {
+		margin-left: auto;
 	}
 </style>

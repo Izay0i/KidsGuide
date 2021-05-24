@@ -19,7 +19,7 @@
 			</b-form-group>
 
 			<b-form-checkbox>Nhớ tài khoản</b-form-checkbox>
-			<b-button  
+			<b-button 
 				variant="success" 
 				class="mt-2"
 				v-on:click="signIn"
@@ -55,8 +55,10 @@
 				AuthService.signIn(payload)
 				.then(response => {
 					//success
+					this.$store.dispatch('setAuth', true);
 					localStorage.setItem('user', JSON.stringify(response));
 					router.push('/home');
+					router.go(0); //reload components hack
 				})
 				.catch(error => {
 					console.log(error);
