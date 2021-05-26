@@ -88,7 +88,8 @@
 					!this.signup.phone.length ||
 					!this.signup.email.length ||
 					!this.signup.password.length ||
-					!this.signup.repass.length) 
+					!this.signup.repass.length || 
+					!this.verifyPassword) 
 				{
 					return
 				}
@@ -115,13 +116,7 @@
 		},
 		computed: {
 			verifyPassword: function() {
-				if (this.signup.repass) {
-					return 'Mật khẩu không được để trống';
-				}
-				else if (this.signup.repass.localeCompare(this.signup.password) !== 0) {
-					return 'Sai mật khẩu';
-				}
-				return '';
+				return this.signup.password.localeCompare(this.signup.repass) === 0 ? true : false;
 			}
 		}
 	}

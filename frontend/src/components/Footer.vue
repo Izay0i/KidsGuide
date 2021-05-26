@@ -1,7 +1,11 @@
 <template>
-	<b-navbar class="footer shadow-lg">
-		<p><i class="far fa-copyright"></i> &nbsp; Designed by Izay0i | github.com/Izay0i </p>
-	</b-navbar>
+	<div>
+		<b-navbar class="footer shadow-lg">
+			<a href="https://github.com/Izay0i" target="_blank"><i class="far fa-copyright"></i> &nbsp; Designed by Izay0i | github.com/Izay0i </a>
+			<a href="/faqs">Các câu hỏi thường gặp</a>
+			<a href="">Điều khoản sử dụng dịch vụ</a>
+		</b-navbar>
+	</div>
 </template>
 
 <script>
@@ -12,15 +16,17 @@
 
 <style scoped>
 	.footer {
-		display: flex;
+		flex-direction: column;
 		justify-content: center;
-		align-items: flex-end;
-		color: white;
 		background-color: #6A92F2;
-		clear: both;
-		position: relative;
-		height: -3em;
-		margin-top: 40em;
-		/*51.6em*/
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+	}
+
+	.footer > * {
+		padding: 10px;
+		color: white;
+		text-decoration: none;
 	}
 </style>

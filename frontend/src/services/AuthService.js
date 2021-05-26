@@ -1,4 +1,5 @@
 import http from '@/http-common';
+
 export default {
 	async signUp(payload) {
 		let response = await http.post('auth/signup', payload);

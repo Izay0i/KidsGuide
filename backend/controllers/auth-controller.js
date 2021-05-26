@@ -34,7 +34,6 @@ const signUp = (request, response) => {
 			response.status(201).send({
 				uid: userID,
 				role: userRole,
-				email: email,
 				avatar: '',
 				accessToken: token
 			});
@@ -76,7 +75,6 @@ const signIn = (request, response) => {
 			response.status(200).send({
 				uid: results.rows[0].uid,
 				role: results.rows[0].role,
-				email: email,
 				avatar: results.rows[0].avatar,
 				accessToken: token
 			});

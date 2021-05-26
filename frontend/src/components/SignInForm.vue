@@ -17,8 +17,7 @@
 					v-model="signin.password"
 				></b-form-input>
 			</b-form-group>
-
-			<b-form-checkbox>Nhớ tài khoản</b-form-checkbox>
+			
 			<b-button 
 				variant="success" 
 				class="mt-2"

@@ -3,8 +3,7 @@
 		<b-navbar class="header">
 			<b-nav pills class="nav-items">
 				<b-nav-item class="home" to="/home">Trang chủ</b-nav-item>
-				<b-nav-item>Các kỹ năng</b-nav-item>
-				<b-nav-item to="/faqs">FAQ</b-nav-item>
+				<b-nav-item>Các kỹ năng khác</b-nav-item>
 				<b-nav-item to="/admin" v-if="isAdmin">Admin</b-nav-item>
 				<b-nav-item class="auth-btn" to="/auth" v-if="!authenticated">Đăng nhập</b-nav-item>
 				<b-avatar 
@@ -50,13 +49,24 @@
 </script>
 
 <style scoped>
-	.navbar {
+	.header {
 		background-color: #049dd9;
 	}
 
 	.nav-items {
 		width: 100%;
 		padding: 10px;
+	}
+
+	@media screen and (max-width: 414px) { /*iPhone 6/7/8 Plus*/
+		.nav-items {
+			flex-direction: column;
+		}
+
+		.profile-btn {
+			margin-left: 0;
+			margin-right: auto;
+		}
 	}
 
 	.nav-items a {

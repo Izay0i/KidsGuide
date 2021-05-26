@@ -6,7 +6,7 @@ const saltRounds = 10;
 //get email, password (salted, see bcrypt), name, address, phone, avatar (if any)
 const getUsers = (request, response) => {
 	pool.query(
-		`select email, password, name, address, phone_numb, avatar from users 
+		`select email, name, address, phone_numb, avatar from users 
 		join userdetails 
 		on users.uid = userdetails.uid;`,
 		(error, results) => {
@@ -18,18 +18,18 @@ const getUsers = (request, response) => {
 };
 
 const getUserByID = (request, response) => {
-	const id = parseInt(request.params.id);
+	const uid = parseInt(request.params.id);
 
 	pool.query(
-		`select email, password, name, address, phone_numb, avatar from users 
+		`select email, name, address, phone_numb, avatar from users 
 		join userdetails 
 		on users.uid = userdetails.uid 
 		where users.uid = $1;`,
-		[id],
+		[uid],
 		(error, results) => {
 			if (error) throw error;
 
-			response.status(200).json(results.rows);
+			response.status(200).json(results.rows[0]);
 		}
 	);
 };
@@ -38,7 +38,7 @@ const getUserByName = (request, response) => {
 	const name = request.query.name;
 
 	pool.query(
-		`select email, password, name, address, phone_numb, avatar from users 
+		`select email, name, address, phone_numb, avatar from users 
 		join userdetails 
 		on users.uid = userdetails.uid 
 		where userdetails.name = $1;`,
@@ -56,7 +56,7 @@ const updateUserEmail = (request, response) => {
 
 	pool.query(
 		'update users set email = $1 where uid = $2;',
-		[uid, email],
+		[email, uid],
 		(error, results) => {
 			if (error) throw error;
 
@@ -69,12 +69,12 @@ const updateUserPassword = (request, response) => {
 	const { uid, password } = request.body;
 
 	pool.query(
-		'update users set password = $1, where uid = $2;',
-		[uid, bcrypt.hashSync(password, saltRounds)],
+		'update users set password = $1 where uid = $2;',
+		[bcrypt.hashSync(password, saltRounds), uid],
 		(error, results) => {
 			if (error) throw error;
 
-			response.status(200).json({ password });
+			response.status(200).json({ message: `Updated password for user ${uid}` });
 		}
 	);
 };

@@ -5,6 +5,10 @@ export default {
 		let response = await http.get(`users/user/${id}`);
 		return response.data;
 	},
+	async updateUserPassword(payload) {
+		let response = await http.put('users/user/password', payload);
+		return response.data;
+	},
 	async updateUserInfo(payload) {
 		let response = await http.put('users/user/info', payload);
 		return response.data;

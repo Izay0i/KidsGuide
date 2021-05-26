@@ -1,13 +1,16 @@
 <template>
 	<div class="profile shadow-lg">
-		<b-avatar 
-			rounded 
-			size="20.2rem" 
-			class="shadow-lg"
-			v-bind:src="user.avatar"
-		></b-avatar>
+		<div class="avatar-frame">
+			<b-avatar 
+				rounded 
+				size="20.2rem" 
+				class="avatar shadow-lg"
+				v-bind:src="user.avatar"
+			></b-avatar>
+			<b-img class="tape" src="../assets/tape.png"></b-img>
+		</div>
 		
-		<b-form class="form w-100 my-5">
+		<b-form class="form w-100 m-5">
 			<b-form-group label="Họ tên:">
 				<b-form-input v-model="user.name"></b-form-input>
 			</b-form-group>
@@ -28,7 +31,7 @@
 				<b-form-input v-model="user.avatar"></b-form-input>
 			</b-form-group>
 
-			<b-button variant="warning" v-on:click="updateUserDetails">Cập nhật thông tin</b-button>
+			<b-button variant="primary" v-on:click="updateUserInfo">Cập nhật thông tin</b-button>
 		</b-form>
 	</div>
 </template>
@@ -52,24 +55,23 @@
 			};
 		},
 		created: function() {
-			this.getUserDetails();
+			this.getUserInfo();
 		},
 		methods: {
-			getUserDetails: async function() {
+			getUserInfo: async function() {
 				UserService.getUserByID(this.$route.params.id)
 				.then(response => {
-					this.user = response[0];
+					this.user = response;
 				})
 				.catch(error => {
 					console.log(error);
 				});
 			},
-			updateUserDetails: async function() {
+			updateUserInfo: async function() {
 				if (!this.user.name.length || 
 					!this.user.address.length || 
 					!this.user.email.length || 
-					!this.user.phone_numb.length || 
-					!this.user.avatar.length)
+					!this.user.phone_numb.length)
 				{
 					return;
 				}
@@ -100,18 +102,44 @@
 </script>
 
 <style scoped>
-	.form {
-		color: #f2bc57;
-	}
+	input, input:focus, select, textarea {
+		background-color: beige;
+		color: gray;
+	}	
 
 	.profile {
 		display: flex;
 		justify-content: space-evenly;
-		flex-direction: column;
-		align-items: center;
 		height: auto;
 		padding: 20px;
 		border-radius: 20px;
-		background-color: #049dd9;
+		background-color: #cfb997;
+	}
+
+	@media screen and (max-width: 768px) { /*iPad screen size*/
+		.profile {
+			flex-direction: column;
+			align-items: center;
+		}
+	}
+
+	.avatar-frame {
+		position: relative;
+	}
+
+	.avatar {
+		border: 20px solid white;
+		transform: rotate(358deg);
+	}
+
+	.tape {
+		transform: scale(0.2) rotate(340deg);
+		position: absolute;
+		top: -25%;
+		left: -85%;
+	}
+
+	.form {
+		font-style: italic;
 	}
 </style>

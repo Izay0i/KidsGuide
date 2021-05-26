@@ -11,7 +11,6 @@
 <script>
 	import Navbar from '@/components/Navbar.vue';
 	import Banner from '@/components/Banner.vue';
-	//import Card from '@/components/Card.vue';
 	import Footer from '@/components/Footer.vue';
 
 	export default {
@@ -19,7 +18,6 @@
 		components: {
 			Navbar,
 			Banner,
-			//Card,
 			Footer
 		},
 		mounted: function() {
@@ -50,5 +48,17 @@
 
 	body {
 		background-color: #6a92f2 !important;
+	}
+
+	#app {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 12vh;
+	}
+
+	@media screen and (max-width: 768px) {
+		#app {
+			margin-bottom: 28vh;
+		}	
 	}
 </style>

@@ -1,14 +1,20 @@
 <template>
 	<div>
-		<b-navbar variant="dark" class="mb-3 shadow-lg">
-			<p class="dashboard-text">Dashboard</p>
+		<b-navbar variant="dark" class="shadow-lg">
+			<p class="dashboard-text">Bảng điều khiển</p>
 		</b-navbar>
 
-		<CardControlPanel />
-
-		<hr/>
-
-		<FaqControlPanel />
+		<b-card no-body>
+			<b-tabs card>
+				<b-tab
+					v-for="tab in tabs"
+					v-bind:key="tab.title"
+					v-bind:title="tab.title"
+				>
+					<component v-bind:is="tab.component"></component>					
+				</b-tab>
+			</b-tabs>
+		</b-card>
 	</div>
 </template>
 
@@ -27,6 +33,10 @@
 				comps: [
 					CardControlPanel,
 					FaqControlPanel
+				],
+				tabs: [
+					{ component: CardControlPanel, title: 'Bài viết' },
+					{ component: FaqControlPanel, title: 'FAQ' }
 				]
 			};
 		}
@@ -36,8 +46,7 @@
 <style scoped>
 	.dashboard-text {
 		color: white;
-		font-size: 46px;
-		font-weight: bold;
+		font-size: 26px;
 		margin: auto;
 	}
 </style>

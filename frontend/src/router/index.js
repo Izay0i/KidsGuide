@@ -36,7 +36,7 @@ const routes = [
 		}
 	},
 	{
-		path: '/user/:id',
+		path: '/user/id/:id',
 		name: 'UserProfile',
 		component: UserProfile,
 		meta: {
@@ -66,7 +66,7 @@ router.beforeEach((to, from, next) => {
 		else {
 			const user = JSON.parse(localStorage.getItem('user'));
 			if (to.matched.some(record => record.meta.adminPermission)) {
-				if (user.role.localeCompare('superuser') == 0) {
+				if (user.role.localeCompare('superuser') === 0) {
 					next();
 				}
 				else {
