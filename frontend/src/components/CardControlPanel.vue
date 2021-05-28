@@ -1,11 +1,9 @@
 <template>
-	<div class="blog-group w-75 m-auto shadow-lg">
-		<p>Bài viết</p>
-
+	<div class="blog-group shadow-lg">
 		<b-form-group class="shadow-sm">
 			<b-form-input 
-				placeholder="https://picsum.photos/300/300/?image=41" 
-				v-model="card_content.banner"
+				placeholder="Ảnh nền" 
+				v-model="card_content.thumbnail"
 				v-bind:state="isPostImageValid"
 			></b-form-input>
 
@@ -17,37 +15,37 @@
 				
 			<b-form-textarea 
 				placeholder="Nội dung" 
-				size="lg"
-				v-model="card_content.content"
+				size="lg" 
+				v-model="card_content.content" 
 				v-bind:state="isPostContentValid"
 			></b-form-textarea>
 		</b-form-group>
 
 		<b-button-group class="mb-3">
-			<b-button class="mr-3 bg-success border-0 rounded" v-on:click="addBlogPost">Thêm</b-button>
+			<b-button class="mr-3 bg-success border-0" v-on:click="addPost">Thêm</b-button>
 		</b-button-group>
 
 		<div class="search-post">
 			<b-button>
-				<b-icon icon="search" v-on:click="getBlogPostByTitle"></b-icon>
+				<b-icon icon="search" v-on:click="getPostByTitle"></b-icon>
 			</b-button>
 			<b-form-input 
 				placeholder="Tìm bài viết"
-				v-model="search_blog"
-				v-on:keyup="getBlogPostByTitle"
+				v-model="search_post"
+				v-on:keyup="getPostByTitle"
 			></b-form-input>
 		</div>
 
 		<b-card-group columns class="m-5" v-if="cards.length">
 			<CardItem 
 				v-for="card in cards" 
-				v-bind:key="card.id"
-				v-bind:prop_id="card.id" 
-				v-bind:prop_banner="card.banner" 
+				v-bind:key="card.post_id"
+				v-bind:prop_id="card.post_id" 
+				v-bind:prop_banner="card.thumbnail" 
 				v-bind:prop_title="card.title" 
 				v-bind:prop_content="card.content"
-				v-on:update-card="updateBlogPost"
-				v-on:delete-card="deleteBlogPost"
+				v-on:update-card="updatePost"
+				v-on:delete-card="deletePost"
 			/>			
 		</b-card-group>
 	</div>
@@ -59,15 +57,15 @@
 	import PostService from '@/services/PostService.js';
 
 	export default {
-		name: 'CarcControlPanel',
+		name: 'CardControlPanel',
 		components: {
 			CardItem
 		},
 		data: function() {
 			return {
-				search_blog: '',
+				search_post: '',
 				card_content: {
-					banner: '',
+					thumbnail: '',
 					title: '',
 					content: ''
 				},
@@ -75,11 +73,11 @@
 			};
 		},
 		created: function() {
-			this.getBlogPosts();
+			this.getPosts();
 		},
 		methods: {
-			getBlogPosts: async function() {
-				PostService.getBlogPosts()
+			getPosts: async function() {
+				PostService.getPosts()
 				.then(response => {
 					this.cards = response;
 				})
@@ -87,13 +85,13 @@
 					console.log(error);
 				});
 			},
-			getBlogPostByTitle: async function() {
-				if (!this.isSearchItemBlogValid) {
-					this.getBlogPosts();
+			getPostByTitle: async function() {
+				if (!this.isSearchItemPostValid) {
+					this.getPosts();
 					return;
 				}
 
-				PostService.getBlogPostByTitle(this.search_blog)
+				PostService.getPostByTitle(this.search_post)
 				.then(response => {
 					this.cards = response;
 				})
@@ -101,7 +99,7 @@
 					console.log(error);
 				});
 			},
-			addBlogPost: function() {
+			addPost: function() {
 				if (!this.isPostImageValid || 
 					!this.isPostTitleValid || 
 					!this.isPostContentValid) 
@@ -109,29 +107,29 @@
 					return;
 				}
 				
-				const payload = JSON.stringify({
-					"title": this.card_content.title,
-					"content": this.card_content.content,
-					"banner": this.card_content.banner
-				});
+				const payload = {
+					title: this.card_content.title,
+					content: this.card_content.content,
+					thumbnail: this.card_content.thumbnail
+				};
 
-				PostService.createBlogPost(payload)
+				PostService.createPost(payload)
 				.then(response => {
 					console.log(response);
-					this.getBlogPosts();
+					this.getPosts();
 				})
 				.catch(error => {
 					console.log(error);
 				});
 			},
-			updateBlogPost: function(id) {
+			updatePost: function(id) {
 				console.log(id);	
 			},
-			deleteBlogPost: function(id) {
-				PostService.deleteBlogPost(id)
+			deletePost: function(id) {
+				PostService.deletePost(id)
 				.then(response => {
 					console.log(response);
-					this.getBlogPosts();
+					this.getPosts();
 				})
 				.catch(error => {
 					console.log(error);
@@ -139,11 +137,11 @@
 			}
 		},
 		computed: {
-			isSearchItemBlogValid: function() {
-				return this.search_blog.length ? true : false;
+			isSearchItemPostValid: function() {
+				return this.search_post.length ? true : false;
 			},
 			isPostImageValid: function() {
-				return this.card_content.banner.length ? true : false;
+				return this.card_content.thumbnail.length ? true : false;
 			},
 			isPostTitleValid: function() {
 				return this.card_content.title.length ? true : false;
@@ -156,14 +154,8 @@
 </script>
 
 <style scoped>
-	p {
-		display: inline-block;
-		width: auto;
-		background-color: goldenrod;
-		color: white;
-		font-size: 30px;
-		border-radius: 8px;
-		padding: 8px;
+	input {
+		margin-bottom: 5px;
 	}
 
 	.blog-group {
@@ -172,6 +164,7 @@
 		border: 2px solid white;
 		border-radius: 5px;
 		padding: 15px;
+		margin: auto;
 		background-color: white;
 	}
 

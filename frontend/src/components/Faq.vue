@@ -5,8 +5,8 @@
             
             <hr/>
 
-            <p v-for="faq in faqs" v-bind:key="faq.id">
-                <span>{{ faq.body.question }}</span> <br/> {{ faq.body.answer }}
+            <p v-for="faq in faqs" v-bind:key="faq.faq_id">
+                <span>{{ faq.content.question }}</span> <br/> {{ faq.content.answer }}
             </p>
         </b-jumbotron>
     </div>

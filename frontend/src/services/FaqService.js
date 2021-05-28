@@ -21,6 +21,10 @@ export default {
 		let response = await http.post('faqs', payload);
 		return response.data;
 	},
+	async updateFaq(payload) {
+		let response = await http.put('faqs', payload);
+		return response.data;
+	},
 	async deleteFaq(id) {
 		let response = await http.delete(`faqs/faq/${id}`);
 		return response.data;

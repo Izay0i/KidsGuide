@@ -49,24 +49,13 @@
 </script>
 
 <style scoped>
-	.header {
+	.header {		
 		background-color: #049dd9;
 	}
 
 	.nav-items {
 		width: 100%;
 		padding: 10px;
-	}
-
-	@media screen and (max-width: 414px) { /*iPhone 6/7/8 Plus*/
-		.nav-items {
-			flex-direction: column;
-		}
-
-		.profile-btn {
-			margin-left: 0;
-			margin-right: auto;
-		}
 	}
 
 	.nav-items a {
@@ -98,5 +87,15 @@
 
 	.profile-btn {
 		margin-left: auto;
+	}
+
+	@media screen and (max-width: 414px) { /*iPhone 6/7/8 Plus*/
+		.nav-items {
+			flex-direction: column;
+		}
+
+		.profile-btn {
+			margin-right: auto;
+		}
 	}
 </style>

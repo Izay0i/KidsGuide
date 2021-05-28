@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<b-img-lazy 
-			v-bind:src="require(`@/assets/${prop_img}`)" 
+			v-bind:src="require(`../assets/${prop_img}`)" 
 			height="100"
 			fluid-grow 
 			alt="Banner image"

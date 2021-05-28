@@ -1,16 +1,35 @@
 <template>
 	<div class="settings shadow-lg">
 		<b-form class=" form w-100 m-5">
-			<b-form-group label="Mật khẩu mới:">
-				<b-form-input type="password" v-model="user.password"></b-form-input>
+			<b-form-group label="Email:">
+				<b-form-input v-model="user.email"></b-form-input>
 			</b-form-group>
 
-			<b-form-group label="Mật khẩu mới:">
-				<b-form-input type="password" v-model="user.repass"></b-form-input>
+			<b-button 
+				variant="success" 
+				class="mb-5" 
+				v-on:click="updateUserEmail"
+			>
+				Cập nhật email
+			</b-button>
+
+
+			<b-form-group
+				v-for="form in form_groups" 
+				v-bind:key="form.label" 
+				v-bind:label="form.label"
+			>
+				<b-form-input v-model="user[form.model]" type="password"></b-form-input>
 			</b-form-group>
 
 			<div class="buttons">
-				<b-button variant="primary" v-on:click="updateUserPassword">Cập nhật mật khẩu</b-button>
+				<b-button 
+					variant="warning" 
+					v-on:click="updateUserPassword"
+				>
+					Cập nhật mật khẩu
+				</b-button>
+				
 				<b-button variant="danger" v-on:click="logOut">Đăng xuất</b-button>
 			</div>
 		</b-form>
@@ -24,16 +43,59 @@
 
 	export default {
 		name: 'UserSettings',
+		props: {
+			prop_user_id: {
+				type: Number,
+				required: true
+			}
+		},
 		data: function() {
 			return {
 				user: {
+					email: '',
 					password: '',
 					repass: ''
-				}
+				},
+				form_groups: [
+					{ label: 'Mật khẩu mới:', model: 'password' },
+					{ label: 'Nhập lại mật khẩu:', model: 'repass' }
+				]
 			};
 		},
+		created: function() {
+			this.getUserEmail();
+		},
 		methods: {
-			updateUserPassword: function() {
+			getUserEmail: async function() {
+				UserService.getUserByID(this.$route.params.id)
+				.then(response => {
+					this.user.email = response.email;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			updateUserEmail: async function() {
+				if (!this.user.email.length) {
+					return;
+				}
+
+				const user = JSON.parse(localStorage.getItem('user'));
+				const payload = {
+					uid: user.uid,
+					email: this.user.email
+				};
+
+				UserService.updateUserEmail(payload)
+				.then(response => {
+					console.log(response);
+					router.go(0);
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			updateUserPassword: async function() {
 				if (!this.user.password.length ||
 					!this.user.repass.length || 
 					!this.verifyPassword) 
@@ -42,10 +104,10 @@
 				}
 
 				const user = JSON.parse(localStorage.getItem('user'));
-				const payload = JSON.stringify({
+				const payload = {
 					uid: user.uid,
 					password: this.user.password
-				});
+				};
 
 				UserService.updateUserPassword(payload)
 				.then(response => {
@@ -72,9 +134,16 @@
 </script>
 
 <style scoped>
-	input, input:focus, select, textarea {
-		background-color: beige;
-		color: gray;
+	input, input:focus, 
+	select, select:focus, 
+	textarea, textarea:focus 
+	{
+		background-color: transparent;
+		color: #36454f;
+		border: 0;
+		border-radius: 0;
+		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+		box-shadow: none;
 	}	
 
 	.settings {
@@ -98,6 +167,6 @@
 	}
 
 	.buttons > :nth-last-child(1) {
-		margin-top: 20%;
+		margin-top: 10vh;
 	}
 </style>

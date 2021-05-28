@@ -2,7 +2,7 @@
 	<div id="app">
 		<Navbar />
 		<Banner />
-		<router-view />
+		<router-view v-bind:key="$route.fullPath" />
 		<router-view name="carousel" />
 		<Footer />
 	</div>
@@ -20,20 +20,25 @@
 			Banner,
 			Footer
 		},
-		mounted: function() {
-			const user = JSON.parse(localStorage.getItem('user'));
+		methods: {
+			getUserToken: function() {
+				const user = JSON.parse(localStorage.getItem('user'));
 
-			if (user == null) {
-				this.$store.dispatch('setAuth', false);
-			}
-			else {
-				this.$store.dispatch('setAuth', true);
-				this.$store.dispatch('setAvatar', user.avatar);
+				if (user == null) {
+					this.$store.dispatch('setAuth', false);
+				}
+				else {
+					this.$store.dispatch('setAuth', true);
+					this.$store.dispatch('setAvatar', user.avatar);
 
-				if (user.role.localeCompare('superuser') == 0) {
-					this.$store.dispatch('setAdmin', true);
+					if (user.role.localeCompare('superuser') == 0) {
+						this.$store.dispatch('setAdmin', true);
+					}
 				}
 			}
+		},
+		mounted: function() {
+			this.getUserToken();
 		}
 	};
 </script>

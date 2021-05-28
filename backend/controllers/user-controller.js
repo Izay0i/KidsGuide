@@ -60,7 +60,7 @@ const updateUserEmail = (request, response) => {
 		(error, results) => {
 			if (error) throw error;
 
-			response.status(200).json({ email });
+			response.status(200).send(`Updated email for user ${uid}`);
 		}
 	);
 };

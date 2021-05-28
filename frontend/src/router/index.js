@@ -5,6 +5,7 @@ import AdminDashboard from '@/components/AdminDashboard.vue';
 import AuthForm from '@/components/AuthForm.vue';
 import CardCarousel from '@/components/CardCarousel.vue';
 import Faq from '@/components/Faq.vue';
+import Terms from '@/components/Terms.vue';
 import UserProfile from '@/components/UserProfile.vue';
 
 Vue.use(VueRouter);
@@ -25,6 +26,11 @@ const routes = [
 		path: '/faqs',
 		name: 'Faq',
 		component: Faq
+	},
+	{
+		path: '/terms',
+		name: 'Terms',
+		component: Terms
 	},
 	{
 		path: '/admin',

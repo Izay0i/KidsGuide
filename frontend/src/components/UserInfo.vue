@@ -4,34 +4,33 @@
 			<b-avatar 
 				rounded 
 				size="20.2rem" 
-				class="avatar shadow-lg"
+				class="avatar shadow-lg" 
 				v-bind:src="user.avatar"
 			></b-avatar>
 			<b-img class="tape" src="../assets/tape.png"></b-img>
 		</div>
 		
 		<b-form class="form w-100 m-5">
-			<b-form-group label="Họ tên:">
-				<b-form-input v-model="user.name"></b-form-input>
+			<b-form-group
+				v-for="form in form_groups" 
+				v-bind:key="form.label" 
+				v-bind:label="form.label" 
+				v-bind:disabled="!isParamUserID"
+			>
+				<b-form-input v-model="user[form.model]"></b-form-input>
+			</b-form-group>
+			
+			<b-form-group label="Ảnh đại diện:" v-if="isParamUserID">
+				<b-form-file accept=".jpg, .png, .gif" v-model="user.avatar"></b-form-file>
 			</b-form-group>
 
-			<b-form-group label="Địa chỉ:">
-				<b-form-input v-model="user.address"></b-form-input>
-			</b-form-group>
-
-			<b-form-group label="Email:">
-				<b-form-input v-model="user.email"></b-form-input>
-			</b-form-group>
-
-			<b-form-group label="SĐT:">
-				<b-form-input v-model="user.phone_numb"></b-form-input>
-			</b-form-group>
-
-			<b-form-group label="Ảnh đại diện:">
-				<b-form-input v-model="user.avatar"></b-form-input>
-			</b-form-group>
-
-			<b-button variant="primary" v-on:click="updateUserInfo">Cập nhật thông tin</b-button>
+			<b-button 
+				variant="primary" 
+				v-on:click="updateUserDetails" 
+				v-if="isParamUserID"
+			>
+				Cập nhật thông tin
+			</b-button>
 		</b-form>
 	</div>
 </template>
@@ -43,22 +42,32 @@
 
 	export default {
 		name: 'UserInfo',
+		props: {
+			prop_user_id: {
+				type: Number,
+				required: true
+			}
+		},
 		data: function() {
 			return {
 				user: {
 					name: '',
 					address: '',
-					email: '',
 					phone_numb: '',
 					avatar: ''
-				}
+				},
+				form_groups: [
+					{ label: 'Họ tên:', model: 'name' },
+					{ label: 'Địa chỉ:', model: 'address' },
+					{ label: 'SĐT:', model: 'phone_numb' }
+				]
 			};
 		},
 		created: function() {
-			this.getUserInfo();
+			this.getUserDetails();
 		},
 		methods: {
-			getUserInfo: async function() {
+			getUserDetails: async function() {
 				UserService.getUserByID(this.$route.params.id)
 				.then(response => {
 					this.user = response;
@@ -67,28 +76,24 @@
 					console.log(error);
 				});
 			},
-			updateUserInfo: async function() {
+			updateUserDetails: async function() {
 				if (!this.user.name.length || 
 					!this.user.address.length || 
-					!this.user.email.length || 
 					!this.user.phone_numb.length)
 				{
 					return;
 				}
 				
 				const user = JSON.parse(localStorage.getItem('user'));
-				const payload = JSON.stringify({ uid: user.uid, ...this.user});
+				const payload = { uid: user.uid, ...this.user };
 
-				UserService.updateUserInfo(payload)
+				UserService.updateUserDetails(payload)
 				.then(response => {
 					this.user = response;
 					//reset local storage and reload
 					localStorage.setItem('user', JSON.stringify({ 
-						uid: user.uid, 
-						role: user.role, 
-						email: response.email,
-						avatar: response.avatar,
-						accessToken: user.accessToken
+						...user,
+						avatar: response.avatar
 					}));
 					
 					router.go(0);
@@ -97,14 +102,26 @@
 					console.log(error);
 				});
 			}
+		},
+		computed: {
+			isParamUserID: function() {
+				return this.prop_user_id === parseInt(this.$route.params.id);
+			}
 		}
 	}
 </script>
 
 <style scoped>
-	input, input:focus, select, textarea {
-		background-color: beige;
-		color: gray;
+	input, input:focus, 
+	select, select:focus, 
+	textarea, textarea:focus
+	{
+		background-color: transparent;
+		color: #36454f;
+		border: 0;
+		border-radius: 0;
+		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+		box-shadow: none;
 	}	
 
 	.profile {
@@ -114,13 +131,6 @@
 		padding: 20px;
 		border-radius: 20px;
 		background-color: #cfb997;
-	}
-
-	@media screen and (max-width: 768px) { /*iPad screen size*/
-		.profile {
-			flex-direction: column;
-			align-items: center;
-		}
 	}
 
 	.avatar-frame {
@@ -141,5 +151,12 @@
 
 	.form {
 		font-style: italic;
+	}
+
+	@media screen and (max-width: 768px) { /*iPad screen size*/
+		.profile {
+			flex-direction: column;
+			align-items: center;
+		}
 	}
 </style>

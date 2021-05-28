@@ -22,7 +22,7 @@ create table UserDetails(
 create table FAQs(
 	faq_id serial not null,
 	uid integer not null,
-	body jsonb not null,
+	content jsonb not null,
 	constraint pk_faq primary key(faq_id),
 	constraint fk_uid foreign key(uid) references Users(uid)
 );

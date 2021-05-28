@@ -45,8 +45,8 @@
 				<b-form-input
 					type="password" 
 					required
-					v-model="signup.repass"
-					v-bind:invalid-feedback="verifyPassword"
+					v-model="signup.repass" 
+					v-bind:state="verifyPassword"
 				></b-form-input>
 			</b-form-group>
 
@@ -94,13 +94,13 @@
 					return
 				}
 
-				const payload = JSON.stringify({
+				const payload = {
 					name: this.signup.name,
 					address: this.signup.address,
 					phone: this.signup.phone,
 					email: this.signup.email,
 					password: this.signup.password,
-				});
+				};
 
 				AuthService.signUp(payload)
 				.then(response => {

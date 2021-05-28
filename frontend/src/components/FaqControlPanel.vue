@@ -1,7 +1,5 @@
 <template>
-	<div class="faq-group w-75 m-auto shadow-lg">
-		<p>Câu hỏi thường gặp</p>
-
+	<div class="faq-group m-auto shadow-lg">
 		<b-form-group class="shadow-sm">
 			<b-form-input
 				placeholder="Câu hỏi"
@@ -17,7 +15,18 @@
 		</b-form-group>
 
 		<b-button-group class="mb-3">
-			<b-button class="mr-3 bg-success border-0 rounded" v-on:click="addFaq">Thêm</b-button>
+			<b-button 
+				class="mr-3 bg-success border-0" 
+				v-on:click="addFaq"
+				v-if="!toggled"
+			>
+				Thêm
+			</b-button>
+
+			<div class="extra-btns" v-if="toggled">
+				<b-button variant="warning" v-on:click="updateFaq">Sửa</b-button>
+				<b-button variant="danger" v-on:click="toggled = false">Hủy</b-button>
+			</div>
 		</b-button-group>
 
 		<div class="search-faq">
@@ -34,11 +43,11 @@
 		<b-card-group class="m-5" v-if="faqs.length">
 			<FaqItem
 				v-for="faq in faqs"
-				v-bind:key="faq.id"
-				v-bind:prop_id="faq.id"
-				v-bind:prop_question="faq.body.question"
-				v-bind:prop_answer="faq.body.answer"
-				v-on:update-faq="updateFaq"
+				v-bind:key="faq.faq_id"
+				v-bind:prop_id="faq.faq_id"
+				v-bind:prop_question="faq.content.question"
+				v-bind:prop_answer="faq.content.answer"
+				v-on:update-faq="toggleEditButtons"
 				v-on:delete-faq="deleteFaq"
 			/>
 		</b-card-group>
@@ -46,6 +55,8 @@
 </template>
 
 <script>
+	import router from '@/router';
+
 	import FaqItem from '@/components/FaqItem.vue';
 
 	import FaqService from '@/services/FaqService.js';
@@ -59,10 +70,12 @@
 			return {
 				search_faq: '',
 				faq_content: {
+					id: '',
 					question: '',
 					answer: ''
 				},
-				faqs: []
+				faqs: [],
+				toggled: false
 			};
 		},
 		created: function() {
@@ -73,6 +86,18 @@
 				FaqService.getFaqs()
 				.then(response => {
 					this.faqs = response;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			getFaqByID: async function() {
+				FaqService.getFaqByID(this.faq_content.id)
+				.then(response => {
+					console.log(response);
+					this.faq_content.id = response.faq_id;
+					this.faq_content.question = response.content.question;
+					this.faq_content.answer = response.content.answer;
 				})
 				.catch(error => {
 					console.log(error);
@@ -97,10 +122,14 @@
 					return;
 				}
 
-				const payload = JSON.stringify({
-					"question": this.faq_content.question,
-					"answer": this.faq_content.answer
-				});
+				const user = JSON.parse(localStorage.getItem('user'));
+				const payload = {
+					uid: user.uid,
+					content: {
+						question: this.faq_content.question,
+						answer: this.faq_content.answer
+					}
+				};
 
 				FaqService.createFaq(payload)
 				.then(response => {
@@ -111,18 +140,45 @@
 					console.log(error);
 				});
 			},
-			updateFaq: async function(id) {
-				console.log(id);
+			updateFaq: async function() {
+				if (!this.isFaqQuestionValid || !this.isFaqAnswerValid) {
+					return;
+				}
+
+				const payload = {
+					id: this.faq_content.id,
+					content: {
+						question: this.faq_content.question,
+						answer: this.faq_content.answer
+					}
+				};
+
+				FaqService.updateFaq(payload)
+				.then(response => {
+					console.log(response);
+					router.go(0);
+				})
+				.catch(error => {
+					console.log(error);
+				});
 			},
 			deleteFaq: async function(id) {
 				FaqService.deleteFaq(id)
 				.then(response => {
 					console.log(response);
+
+					this.toggled = false;
+					
 					this.getFaqs();
 				})
 				.catch(error => {
 					console.log(error);
 				});
+			},
+			toggleEditButtons: function(id) {
+				this.toggled = true;
+				this.faq_content.id = id;
+				this.getFaqByID(id);
 			}
 		},
 		computed: {
@@ -140,14 +196,8 @@
 </script>
 
 <style scoped>
-	p {
-		display: inline-block;
-		width: auto;
-		background-color: goldenrod;
-		color: white;
-		font-size: 30px;
-		border-radius: 8px;
-		padding: 8px;
+	input {
+		margin-bottom: 5px;
 	}
 
 	.faq-group {
@@ -162,5 +212,9 @@
 	.faq-group .search-faq {
 		display: flex;
 		justify-content: space-between;
+	}
+
+	.faq-group .extra-btns > * {
+		margin-right: 10px;
 	}
 </style>

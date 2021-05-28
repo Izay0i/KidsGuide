@@ -46,10 +46,10 @@
 		},
 		methods: {
 			signIn: async function() {
-				const payload = JSON.stringify({
+				const payload = {
 					email: this.signin.email,
 					password: this.signin.password
-				});
+				};
 
 				AuthService.signIn(payload)
 				.then(response => {

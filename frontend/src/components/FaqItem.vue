@@ -1,21 +1,21 @@
 <template>
 	<div>
 		<b-card 
-			class="m-1" 
+			class="card mb-2" 
 			v-bind:title="faq_content.question"
 		>
 			<b-card-text>{{ faq_content.answer }}</b-card-text>
 
 			<div class="footer">
 				<b-button
-					class="mr-3 bg-warning border-0 rounded"
+					class="mr-3 bg-warning border-0"
 					v-on:click="updateFaq"
 				>
 					Sửa
 				</b-button>
 				
 				<b-button
-					class="mr-3 bg-danger border-0 rounded" 
+					class="mr-3 bg-danger border-0" 
 					v-on:click="deleteFaq"
 				>
 					Xóa
@@ -63,8 +63,11 @@
 </script>
 
 <style scoped>
-	.card {
-		max-width: 100vw;
-		width: 800px;
+	body {
+		display: flex;
+	}
+
+	div {
+		flex: 0 0 100%;
 	}
 </style>

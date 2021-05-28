@@ -2,7 +2,7 @@ const pool = require('../db-connection.js');
 
 const getFaqs = (request, response) => {
 	pool.query(
-		'select * from faqs;',
+		'select * from faqs order by faq_id asc;',
 		(error, results) => {
 			if (error) throw error;
 			
@@ -29,7 +29,7 @@ const getFaqByQuestion = (request, response) => {
 	const question = request.query.question[0];
 
 	pool.query(
-		`select * from faqs where body->>'question' like $1 || '%';`,
+		`select * from faqs where content->>'question' like $1 || '%';`,
 		[question],
 		(error, results) => {
 			if (error) throw error;
@@ -40,15 +40,29 @@ const getFaqByQuestion = (request, response) => {
 };
 
 const createFaq = (request, response) => {
-	const body = request.body;
+	const { uid, content } = request.body;
 
 	pool.query(
-		'insert into faqs (body) values ($1) returning faq_id;',
-		[body],
+		'insert into faqs (uid, content) values ($1, $2) returning faq_id;',
+		[uid, content],
 		(error, results) => {
 			if (error) throw error;
 
 			response.status(201).send(`Faq added with ID: ${results.rows[0].faq_id}`);
+		}
+	);
+};
+
+const updateFaq = (request, response) => {
+	const { id, content } = request.body;
+	
+	pool.query(
+		`update faqs set content = $1 where faq_id = $2;`,
+		[content, id],
+		(error, results) => {
+			if (error) throw error;
+
+			response.status(200).send(`Updated faq with ID: ${id}`);
 		}
 	);
 };
@@ -72,5 +86,6 @@ module.exports = {
 	getFaqByID,
 	getFaqByQuestion,
 	createFaq,
+	updateFaq,
 	deleteFaq
 };

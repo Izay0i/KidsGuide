@@ -3,6 +3,8 @@ const dotenv = require('dotenv').config();
 const bcrypt = require('bcrypt');
 const pool = require('../db-connection.js');
 
+const expireTime = '24h';
+
 const signUp = (request, response) => {
 	const saltRounds = 10;
 	const { name, address, phone, email, password } = request.body;
@@ -28,13 +30,14 @@ const signUp = (request, response) => {
 			//create a token and send it back to the client
 			const token = jwt.sign(
 				{ uid: userID },
-				process.env.SECRET_KEY
+				process.env.SECRET_KEY,
+				{ expiresIn: expireTime }
 			);
 
-			response.status(201).send({
+			response.status(201).json({
 				uid: userID,
 				role: userRole,
-				avatar: '',
+				avatar: null,
 				accessToken: token
 			});
 		}
@@ -69,10 +72,11 @@ const signIn = (request, response) => {
 			//ditto
 			const token = jwt.sign(
 				{ uid: results.rows[0].uid }, 
-				process.env.SECRET_KEY
+				process.env.SECRET_KEY,
+				{ expiresIn: expireTime }
 			);
 
-			response.status(200).send({
+			response.status(200).json({
 				uid: results.rows[0].uid,
 				role: results.rows[0].role,
 				avatar: results.rows[0].avatar,

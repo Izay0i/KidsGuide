@@ -1,17 +1,31 @@
 const pool = require('../db-connection.js');
 
-const getBlogPosts = (request, response) => {
+const getPosts = (request, response) => {
 	pool.query(
 		'select * from posts;',
 		(error, results) => {
 			if (error) throw error;
 
-			response.send(results.rows);
+			response.status(200).send(results.rows);
 		}
 	);
 };
 
-const getBlogPostByID = (request, response) => {
+const getPostsByUserID = (request, response) => {
+	const id = parseInt(request.params.id);
+
+	pool.query(
+		'select * from posts where uid = $1;',
+		[id],
+		(error, results) => {
+			if (error) throw error;
+
+			response.status(200).send(results.rows);
+		}
+	);
+};
+
+const getPostByID = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
@@ -25,7 +39,7 @@ const getBlogPostByID = (request, response) => {
 	);
 };
 
-const getBlogPostByTitle = (request, response) => {
+const getPostByTitle = (request, response) => {
 	const title = request.query.title[0];
 	
 	pool.query(
@@ -39,12 +53,12 @@ const getBlogPostByTitle = (request, response) => {
 	);
 };
 
-const createBlogPost = (request, response) => {
-	const { title, content, thumbnail } = request.body;
+const createPost = (request, response) => {
+	const { uid, title, content, thumbnail } = request.body;
 
 	pool.query(
-		'insert into posts (title, content, thumbnail) values ($1, $2, $3) returning post_id;',
-		[title, content, thumbnail],
+		'insert into posts (uid, title, content, thumbnail) values ($1, $2, $3, $4) returning post_id;',
+		[uid, title, content, thumbnail],
 		(error, results) => {
 			if (error) throw error;
 
@@ -53,7 +67,23 @@ const createBlogPost = (request, response) => {
 	);
 };
 
-const deleteBlogPost = (request, response) => {
+const updatePost = (request, response) => {
+	const { id, title, content, thumbnail } = request.body;
+
+	pool.query(
+		`update posts 
+		set title = $1, content = $2, thumbnail = $3, post_time = now() 
+		where post_id = $4;`,
+		[title, content, thumbnail, id],
+		(error, results) => {
+			if (error) throw error;
+
+			response.status(200).send(`Post updated with ID: ${id}`);
+		}
+	);
+};
+
+const deletePost = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
@@ -68,9 +98,11 @@ const deleteBlogPost = (request, response) => {
 };
 
 module.exports = {
-	getBlogPosts,
-	getBlogPostByID,
-	getBlogPostByTitle,
-	createBlogPost,
-	deleteBlogPost
+	getPosts,
+	getPostsByUserID,
+	getPostByID,
+	getPostByTitle,
+	createPost,
+	updatePost,
+	deletePost
 };

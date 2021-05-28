@@ -17,8 +17,7 @@ function verifyToken(request, response, next) {
 		if (error) {
 			return response.sendStatus(401);
 		}
-
-		//request.uid = decoded.uid;
+		
 		next();
 	});
 }

@@ -12,6 +12,6 @@ router.get('/user', userController.getUserByName);
 router.put('/user/email', authMiddleware.veritfyEmail, userController.updateUserEmail);
 router.put('/user/password', userController.updateUserPassword);
 router.put('/user/details', userController.updateUserDetails);
-router.put('/user/info', userController.updateUserInfo);
+router.put('/user/info', authMiddleware.veritfyEmail, userController.updateUserInfo);
 
 module.exports = router;
