@@ -16,20 +16,20 @@
 
 		<b-button-group class="mb-3">
 			<b-button 
-				class="mr-3 bg-success border-0" 
+				class="mr-3 bg-success border-0 rounded" 
 				v-on:click="addFaq"
-				v-if="!toggled"
+				v-show="!toggled"
 			>
 				Thêm
 			</b-button>
 
-			<div class="extra-btns" v-if="toggled">
+			<div class="extra-btns" v-show="toggled">
 				<b-button variant="warning" v-on:click="updateFaq">Sửa</b-button>
-				<b-button variant="danger" v-on:click="toggled = false">Hủy</b-button>
+				<b-button variant="danger" v-on:click="clearInputs">Hủy</b-button>
 			</div>
 		</b-button-group>
 
-		<div class="search-faq">
+		<div class="search-faq mb-4">
 			<b-button>
 				<b-icon icon="search" v-on:click="getFaqByQuestion"></b-icon>
 			</b-button>
@@ -40,7 +40,7 @@
 			></b-form-input>
 		</div>
 
-		<b-card-group class="m-5" v-if="faqs.length">
+		<b-card-group columns v-if="faqs.length">
 			<FaqItem
 				v-for="faq in faqs"
 				v-bind:key="faq.faq_id"
@@ -55,8 +55,6 @@
 </template>
 
 <script>
-	import router from '@/router';
-
 	import FaqItem from '@/components/FaqItem.vue';
 
 	import FaqService from '@/services/FaqService.js';
@@ -134,6 +132,7 @@
 				FaqService.createFaq(payload)
 				.then(response => {
 					console.log(response);
+					this.clearInputs();
 					this.getFaqs();
 				})
 				.catch(error => {
@@ -156,7 +155,8 @@
 				FaqService.updateFaq(payload)
 				.then(response => {
 					console.log(response);
-					router.go(0);
+					this.clearInputs();
+					this.getFaqs();
 				})
 				.catch(error => {
 					console.log(error);
@@ -167,7 +167,7 @@
 				.then(response => {
 					console.log(response);
 
-					this.toggled = false;
+					this.clearInputs();
 					
 					this.getFaqs();
 				})
@@ -179,6 +179,11 @@
 				this.toggled = true;
 				this.faq_content.id = id;
 				this.getFaqByID(id);
+			},
+			clearInputs: function() {
+				this.toggled = false;
+				this.faq_content.question = '';
+				this.faq_content.answer = '';
 			}
 		},
 		computed: {
@@ -200,9 +205,7 @@
 		margin-bottom: 5px;
 	}
 
-	.faq-group {
-		overflow-y: auto;
-		height: 50rem;
+	.faq-group {		
 		border: 2px solid white;
 		border-radius: 5px;
 		padding: 15px;

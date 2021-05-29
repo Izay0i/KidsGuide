@@ -20,6 +20,9 @@
 			Banner,
 			Footer
 		},
+		mounted: function() {
+			this.getUserToken();
+		},
 		methods: {
 			getUserToken: function() {
 				const user = JSON.parse(localStorage.getItem('user'));
@@ -36,9 +39,6 @@
 					}
 				}
 			}
-		},
-		mounted: function() {
-			this.getUserToken();
 		}
 	};
 </script>

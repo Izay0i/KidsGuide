@@ -11,6 +11,10 @@
 		</div>
 		
 		<b-form class="form w-100 m-5">
+			<b-form-group label="Ảnh đại diện:" v-if="isParamUserID">
+				<b-form-file accept=".jpg, .png, .gif" v-model="user.avatar"></b-form-file>
+			</b-form-group>
+			
 			<b-form-group
 				v-for="form in form_groups" 
 				v-bind:key="form.label" 
@@ -18,10 +22,6 @@
 				v-bind:disabled="!isParamUserID"
 			>
 				<b-form-input v-model="user[form.model]"></b-form-input>
-			</b-form-group>
-			
-			<b-form-group label="Ảnh đại diện:" v-if="isParamUserID">
-				<b-form-file accept=".jpg, .png, .gif" v-model="user.avatar"></b-form-file>
 			</b-form-group>
 
 			<b-button 
