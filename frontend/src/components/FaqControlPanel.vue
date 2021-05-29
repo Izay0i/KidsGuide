@@ -40,7 +40,7 @@
 			></b-form-input>
 		</div>
 
-		<b-card-group columns v-if="faqs.length">
+		<b-card-group v-if="faqs.length">
 			<FaqItem
 				v-for="faq in faqs"
 				v-bind:key="faq.faq_id"
@@ -76,7 +76,7 @@
 				toggled: false
 			};
 		},
-		created: function() {
+		mounted: function() {
 			this.getFaqs();
 		},
 		methods: {
@@ -166,9 +166,7 @@
 				FaqService.deleteFaq(id)
 				.then(response => {
 					console.log(response);
-
 					this.clearInputs();
-					
 					this.getFaqs();
 				})
 				.catch(error => {
@@ -178,7 +176,7 @@
 			toggleEditButtons: function(id) {
 				this.toggled = true;
 				this.faq_content.id = id;
-				this.getFaqByID(id);
+				this.getFaqByID();
 			},
 			clearInputs: function() {
 				this.toggled = false;

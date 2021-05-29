@@ -5,7 +5,7 @@ const authMiddleware = require('../middleware/auth-middleware');
 const postController = require('../controllers/post-controller');
 
 router.get('/', postController.getPosts);
-router.get('/:id', postController.getPostsByUserID);
+router.get('/user/:id', postController.getPostsByUserID);
 router.get('/post/:id', postController.getPostByID);
 router.get('/post', postController.getPostByTitle);
 router.post('/', authMiddleware.verifyToken, postController.createPost);

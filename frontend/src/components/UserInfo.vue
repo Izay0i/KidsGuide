@@ -12,7 +12,7 @@
 		
 		<b-form class="form w-100 m-5">
 			<b-form-group label="Ảnh đại diện:" v-if="isParamUserID">
-				<b-form-file accept=".jpg, .png, .gif" v-model="user.avatar"></b-form-file>
+				<b-form-file accept=".jpg, .png, .gif"></b-form-file>
 			</b-form-group>
 			
 			<b-form-group
@@ -112,7 +112,7 @@
 </script>
 
 <style scoped>
-	input, input:focus, 
+	input[type="text"], input:focus, 
 	select, select:focus, 
 	textarea, textarea:focus
 	{

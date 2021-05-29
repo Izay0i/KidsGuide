@@ -10,6 +10,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 Vue.config.productionTip = false;
 
+Vue.prototype.$hostname = 'http://localhost:8080';
+
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 

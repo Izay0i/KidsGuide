@@ -34,7 +34,7 @@ create table Posts(
 	content text not null,
 	thumbnail text,
 	post_time timestamp without time zone not null default now(),
-	tags jsonb,
+	tags text[],
 	favorites integer not null default 0,
 	constraint pk_post primary key(post_id),
 	constraint fk_uid foreign key(uid) references Users(uid)

@@ -1,5 +1,7 @@
 <template>
 	<div>
+		<Banner />
+
 		<b-card no-body>
 			<b-tabs card>
 				<b-tab
@@ -22,6 +24,7 @@
 </template>
 
 <script>
+	import Banner from '@/components/Banner.vue';
 	import UserInfo from '@/components/UserInfo.vue';
 	import CardControlPanel from '@/components/CardControlPanel.vue';
 	import UserSettings from '@/components/UserSettings.vue';
@@ -29,6 +32,7 @@
 	export default {
 		namer: 'UserProfile',
 		components: {
+			Banner,
 			UserSettings
 		},
 		data: function() {

@@ -31,7 +31,7 @@ const signUp = (request, response) => {
 			const token = jwt.sign(
 				{ uid: userID },
 				process.env.SECRET_KEY,
-				{ expiresIn: expireTime }
+				//{ expiresIn: expireTime }
 			);
 
 			response.status(201).json({
@@ -73,7 +73,7 @@ const signIn = (request, response) => {
 			const token = jwt.sign(
 				{ uid: results.rows[0].uid }, 
 				process.env.SECRET_KEY,
-				{ expiresIn: expireTime }
+				//{ expiresIn: expireTime }
 			);
 
 			response.status(200).json({

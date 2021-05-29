@@ -2,10 +2,32 @@
 	<div>
 		<b-navbar class="header">
 			<b-nav pills class="nav-items">
-				<b-nav-item class="home" to="/home">Trang chủ</b-nav-item>
-				<b-nav-item>Các kỹ năng khác</b-nav-item>
-				<b-nav-item to="/admin" v-if="isAdmin">Admin</b-nav-item>
-				<b-nav-item class="auth-btn" to="/auth" v-if="!authenticated">Đăng nhập</b-nav-item>
+				<b-nav-item 
+					class="home" 
+					v-bind:to="{ name: 'Home' }"
+				>
+					Trang chủ
+				</b-nav-item>
+				
+				<b-nav-item>
+					Các kỹ năng khác
+				</b-nav-item>
+				
+				<b-nav-item 
+					v-bind:to="{ name: 'AdminDashboard' }" 
+					v-if="isAdmin"
+				>
+					Admin
+				</b-nav-item>
+				
+				<b-nav-item 
+					class="auth-btn" 
+					v-bind:to="{ name: 'AuthForm' }" 
+					v-if="!authenticated"
+				>
+					Đăng nhập
+				</b-nav-item>
+				
 				<b-avatar 
 					class="profile-btn" 
 					v-bind:to="{ name: 'UserProfile', params: { id: userID } }" 

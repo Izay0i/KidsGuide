@@ -19,24 +19,18 @@
 </template>
 
 <script>
-	import CardControlPanel from '@/components/CardControlPanel.vue';
 	import FaqControlPanel from '@/components/FaqControlPanel.vue';
 
 	export default {
 		name: 'AdminDashboard',
 		components: {
-			CardControlPanel,
 			FaqControlPanel
 		},
 		data: function() {
 			return {
-				comps: [
-					CardControlPanel,
-					FaqControlPanel
-				],
 				tabs: [
-					{ component: CardControlPanel, title: 'Bài viết' },
-					{ component: FaqControlPanel, title: 'FAQ' }
+					{ component: FaqControlPanel, title: 'FAQ' },
+					{ component: '', title: 'Báo cáo' }
 				]
 			};
 		}

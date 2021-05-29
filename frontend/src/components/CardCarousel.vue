@@ -3,31 +3,49 @@
         <h2><span>Các kỹ năng</span></h2>
 
         <b-carousel
-            id="carousel-1"
-            v-bind:interval="4000"
-            controls
-            indicators
-            background="#ababab"
-            style="text-shadow: 1px 1px 2px #333;"
+            class="carousel" 
+            controls 
+            indicators 
+            background="#ababab" 
+            v-bind:interval="5000"
         >
             <!-- Text slides with image -->
-            <b-carousel-slide
-                caption="First slide"
-                text="Nulla vitae elit libero, a pharetra augue mollis interdum."
-                img-src="https://picsum.photos/1024/480/?image=52"
-            ></b-carousel-slide>
-
-            <!-- Slides with custom text -->
-            <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54">
-                <h3>Hello world!</h3>
-            </b-carousel-slide>
+            <b-carousel-slide 
+				v-for="post in posts" 
+				v-bind:key="post.title" 
+                v-bind:caption="post.title" 
+                v-bind:text="post.content" 
+                v-bind:img-src="post.thumbnail"
+            >
+			</b-carousel-slide>
         </b-carousel>
     </div>
 </template>
 
 <script>
+	import PostService from '@/services/PostService.js';
+
     export default {
-        name: 'CardCarousel'
+        name: 'CardCarousel',
+		data: function() {
+			return {
+				posts: []
+			};
+		},
+		created: function() {
+			this.getPostsByUserID();
+		},
+		methods: {
+			getPostsByUserID: async function() {
+				PostService.getPostsByUserID(41)
+				.then(response => {
+					this.posts = response;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			}
+		}
     }
 </script>
 
@@ -45,4 +63,8 @@
         color: white;
         padding: 0px 10px; 
     }
+
+	.carousel {
+		text-shadow: 1px 1px 2px #333;
+	}
 </style>

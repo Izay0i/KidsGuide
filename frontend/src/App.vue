@@ -1,8 +1,8 @@
 <template>
 	<div id="app">
 		<Navbar />
-		<Banner />
 		<router-view v-bind:key="$route.fullPath" />
+		<router-view name="banner" />
 		<router-view name="carousel" />
 		<Footer />
 	</div>
@@ -10,14 +10,14 @@
 
 <script>
 	import Navbar from '@/components/Navbar.vue';
-	import Banner from '@/components/Banner.vue';
+	//import Banner from '@/components/Banner.vue';
 	import Footer from '@/components/Footer.vue';
 
 	export default {
 		name: 'App',
 		components: {
 			Navbar,
-			Banner,
+			//Banner,
 			Footer
 		},
 		mounted: function() {

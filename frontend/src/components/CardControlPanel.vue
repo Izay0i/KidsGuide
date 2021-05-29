@@ -1,8 +1,8 @@
 <template>
-	<div class="blog-group shadow-lg">
+	<div class="post-group shadow-lg">
 		<b-form-group class="shadow-sm">
 			<b-form-input 
-				placeholder="Ảnh nền" 
+				placeholder="Ảnh bìa" 
 				v-model="card_content.thumbnail"
 				v-bind:state="isPostImageValid"
 			></b-form-input>
@@ -19,13 +19,30 @@
 				v-model="card_content.content" 
 				v-bind:state="isPostContentValid"
 			></b-form-textarea>
+
+			<b-form-tags 
+				separator=" " 
+				remove-on-delete 
+				v-model="card_content.tags"
+			></b-form-tags>
 		</b-form-group>
 
 		<b-button-group class="mb-3">
-			<b-button class="mr-3 bg-success border-0" v-on:click="addPost">Thêm</b-button>
+			<b-button 
+				class="mr-3 bg-success border-0 rounded" 
+				v-on:click="addPost" 
+				v-show="!toggled"
+			>
+				Thêm
+			</b-button>
+
+			<div class="extra-btns" v-show="toggled">
+				<b-button variant="warning" v-on:click="updatePost">Sửa</b-button>
+				<b-button variant="danger" v-on:click="clearInputs">Hủy</b-button>
+			</div>
 		</b-button-group>
 
-		<div class="search-post">
+		<div class="search-post mb-4">
 			<b-button>
 				<b-icon icon="search" v-on:click="getPostByTitle"></b-icon>
 			</b-button>
@@ -36,15 +53,17 @@
 			></b-form-input>
 		</div>
 
-		<b-card-group columns class="m-5" v-if="cards.length">
+		<b-card-group v-if="cards.length">
 			<CardItem 
 				v-for="card in cards" 
 				v-bind:key="card.post_id"
 				v-bind:prop_id="card.post_id" 
 				v-bind:prop_banner="card.thumbnail" 
 				v-bind:prop_title="card.title" 
-				v-bind:prop_content="card.content"
-				v-on:update-card="updatePost"
+				v-bind:prop_content="card.content" 
+				v-bind:prop_date="card.post_time" 
+				v-bind:prop_tags="card.tags" 
+				v-on:update-card="toggledEditButtons"
 				v-on:delete-card="deletePost"
 			/>			
 		</b-card-group>
@@ -52,6 +71,8 @@
 </template>
 
 <script>
+	import moment from 'moment';
+
 	import CardItem from '@/components/CardItem.vue';
 
 	import PostService from '@/services/PostService.js';
@@ -64,21 +85,34 @@
 		data: function() {
 			return {
 				search_post: '',
+				id: '',
 				card_content: {
-					thumbnail: '',
 					title: '',
-					content: ''
+					thumbnail: '',	
+					content: '',
+					tags: []
 				},
-				cards: []
+				cards: [],
+				toggled: false
 			};
 		},
-		created: function() {
-			this.getPosts();
+		mounted: function() {
+			this.getPostsByUserID();
 		},
 		methods: {
-			getPosts: async function() {
-				PostService.getPosts()
+			getPostByID: async function() {
+				PostService.getPostByID(this.id)
 				.then(response => {
+					this.card_content = response;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			getPostsByUserID: async function() {
+				PostService.getPostsByUserID(this.$route.params.id)
+				.then(response => {
+					this.formatPostTime(response);
 					this.cards = response;
 				})
 				.catch(error => {
@@ -87,7 +121,7 @@
 			},
 			getPostByTitle: async function() {
 				if (!this.isSearchItemPostValid) {
-					this.getPosts();
+					this.getPostsByUserID();
 					return;
 				}
 
@@ -107,33 +141,78 @@
 					return;
 				}
 				
+				const user = JSON.parse(localStorage.getItem('user'));
 				const payload = {
+					uid: user.uid,
 					title: this.card_content.title,
 					content: this.card_content.content,
-					thumbnail: this.card_content.thumbnail
+					thumbnail: this.card_content.thumbnail,
+					tags: this.card_content.tags
 				};
 
 				PostService.createPost(payload)
 				.then(response => {
 					console.log(response);
-					this.getPosts();
+					this.clearInputs();
+					this.getPostsByUserID();
 				})
 				.catch(error => {
 					console.log(error);
 				});
 			},
-			updatePost: function(id) {
-				console.log(id);	
+			updatePost: async function() {
+				if (!this.isPostImageValid || 
+					!this.isPostTitleValid || 
+					!this.isPostContentValid) 
+				{
+					return;
+				}
+				
+				const payload = {
+					id: this.id,
+					title: this.card_content.title,
+					content: this.card_content.content,
+					thumbnail: this.card_content.thumbnail,
+					tags: this.card_content.tags
+				};
+
+				PostService.updatePost(payload)
+				.then(response => {
+					console.log(response);
+					this.clearInputs();
+					this.getPostsByUserID();
+				})
+				.catch(error => {
+					console.log(error);
+				});
 			},
 			deletePost: function(id) {
 				PostService.deletePost(id)
 				.then(response => {
 					console.log(response);
-					this.getPosts();
+					this.clearInputs();
+					this.getPostsByUserID();
 				})
 				.catch(error => {
 					console.log(error);
 				});
+			},
+			formatPostTime: function(arr) {
+				arr.forEach(
+					(item) => item.post_time = moment(item.post_time).format('DD/MM/YYYY')
+				);
+			},
+			toggledEditButtons: function(id) {
+				this.toggled = true;
+				this.id = id;
+				this.getPostByID();
+			},
+			clearInputs: function() {
+				this.toggled = false;
+				this.card_content.thumbnail = '';
+				this.card_content.title = '';
+				this.card_content.content = '';
+				this.card_content.tags = [];
 			}
 		},
 		computed: {
@@ -154,13 +233,11 @@
 </script>
 
 <style scoped>
-	input {
+	input, textarea {
 		margin-bottom: 5px;
 	}
 
-	.blog-group {
-		overflow-y: auto;
-		height: 50rem;
+	.post-group {
 		border: 2px solid white;
 		border-radius: 5px;
 		padding: 15px;
@@ -168,8 +245,12 @@
 		background-color: white;
 	}
 
-	.blog-group .search-post {
+	.post-group .search-post {
 		display: flex;
 		justify-content: space-between;
+	}
+
+	.post-group .extra-btns > * {
+		margin-right: 10px;
 	}
 </style>

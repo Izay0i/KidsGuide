@@ -1,8 +1,7 @@
 <template>
 	<div>
 		<b-img-lazy 
-			v-bind:src="require(`../assets/${prop_img}`)" 
-			height="100"
+			src="../assets/banner.jpg" 
 			fluid-grow 
 			alt="Banner image"
 		>	
@@ -12,13 +11,7 @@
 
 <script>
 	export default {
-		name: 'Banner',
-		props: {
-			prop_img: {
-				type: String,
-				default: 'banner.jpg'
-			}
-		}
+		name: 'Banner'
 	};
 </script>
 

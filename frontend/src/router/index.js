@@ -3,10 +3,12 @@ import VueRouter from 'vue-router';
 
 import AdminDashboard from '@/components/AdminDashboard.vue';
 import AuthForm from '@/components/AuthForm.vue';
+import Banner from '@/components/Banner.vue';
 import CardCarousel from '@/components/CardCarousel.vue';
 import Faq from '@/components/Faq.vue';
 import Terms from '@/components/Terms.vue';
 import UserProfile from '@/components/UserProfile.vue';
+import PostItem from '@/components/PostItem.vue';
 
 Vue.use(VueRouter);
 
@@ -19,6 +21,7 @@ const routes = [
 		path: '/home',
 		name: 'Home',
 		components: {
+			banner: Banner,
 			carousel: CardCarousel
 		}
 	},
@@ -48,6 +51,11 @@ const routes = [
 		meta: {
 			requiresAuth: true
 		}
+	},
+	{
+		path: '/post/id/:id',
+		name: 'Post',
+		component: PostItem
 	},
 	{
 		path: '/auth',

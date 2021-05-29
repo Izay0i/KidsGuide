@@ -1,10 +1,12 @@
 <template>
 	<div>
 		<b-card 
-			class="card mb-2" 
+			class="mb-2" 
 			v-bind:title="faq_content.question"
 		>
-			<b-card-text>{{ faq_content.answer }}</b-card-text>
+			<span class="answer">
+				<b-card-text>{{ faq_content.answer }}</b-card-text>
+			</span>
 
 			<div class="footer">
 				<b-button
@@ -69,5 +71,9 @@
 
 	div {
 		flex: 0 0 100%;
+	}
+
+	.answer {
+		white-space: pre-wrap;
 	}
 </style>

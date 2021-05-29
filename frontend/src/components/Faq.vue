@@ -1,12 +1,16 @@
 <template>
     <div>
+		<Banner />
+
         <b-jumbotron header="Các câu hỏi thường gặp" class="w-75 m-auto">
             <b-img thumbnail fluid src="@/assets/book.png" alt="Logo"></b-img>
             
             <hr/>
 
             <p v-for="faq in faqs" v-bind:key="faq.faq_id">
-                <span>{{ faq.content.question }}</span> <br/> {{ faq.content.answer }}
+                <span class="question">{{ faq.content.question }}</span> 
+				<br/> 
+				<span class="answer">{{ faq.content.answer }}</span>
             </p>
         </b-jumbotron>
     </div>
@@ -15,8 +19,13 @@
 <script>
 	import FaqService from '@/services/FaqService.js';
 
+	import Banner from '@/components/Banner.vue';
+
     export default {
         name: 'Faq',
+		components: {
+			Banner
+		},
         data: function() {
             return {
                 faqs: []
@@ -41,8 +50,12 @@
 </script>
 
 <style scoped>
-	p span {
+	.question {
 		font-weight: bold;
 		color: blueviolet;
+	}
+
+	.answer {
+		white-space: pre-wrap;
 	}
 </style>
