@@ -2,9 +2,7 @@
 	<div>
 		<b-img-lazy 
 			fluid-grow 
-			rounded="0" 
 			alt="Thumbnail" 
-			class="image" 
 			v-bind:src="post.thumbnail"
 		></b-img-lazy>
 
@@ -78,15 +76,9 @@
 		white-space: pre-wrap;
 	}
 
-	.image {
-		border-radius: 20px;
-	}
-
 	.body {
 		background-color: #cfb997;
-		border-radius: 20px;
 		padding: 20px;
-		margin: 20px;
 	}
 
 	.tags {

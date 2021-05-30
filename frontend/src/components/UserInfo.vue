@@ -145,7 +145,7 @@
 	.tape {
 		transform: scale(0.2) rotate(340deg);
 		position: absolute;
-		top: -25%;
+		top: -30%;
 		left: -85%;
 	}
 

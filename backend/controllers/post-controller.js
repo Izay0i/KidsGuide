@@ -12,7 +12,7 @@ const getPosts = (request, response) => {
 };
 
 const getPostsByUserID = (request, response) => {
-	const id = request.params.id;
+	const id = parseInt(request.params.id);
 
 	pool.query(
 		'select * from posts where uid = $1 order by post_time desc;',
@@ -26,7 +26,7 @@ const getPostsByUserID = (request, response) => {
 };
 
 const getPostByID = (request, response) => {
-	const id = request.params.id;
+	const id = parseInt(request.params.id);
 
 	pool.query(
 		'select * from posts where post_id = $1;',
