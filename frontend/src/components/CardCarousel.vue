@@ -6,17 +6,23 @@
             class="carousel" 
             controls 
             indicators 
-            background="#ababab" 
             v-bind:interval="5000"
         >
-            <!-- Text slides with image -->
             <b-carousel-slide 
 				v-for="post in posts" 
 				v-bind:key="post.title" 
-                v-bind:caption="post.title" 
-                v-bind:text="post.content" 
-                v-bind:img-src="post.thumbnail"
+                v-bind:caption="post.title"
             >
+				<template #img>
+					<router-link
+						v-bind:to="{ name: 'Post', params: { id: post.post_id } }"
+					>
+						<img 
+							class="d-block img-fluid w-100"
+							v-bind:src="post.thumbnail"
+						/>
+					</router-link>					
+				</template>				
 			</b-carousel-slide>
         </b-carousel>
     </div>
@@ -37,7 +43,8 @@
 		},
 		methods: {
 			getPostsByUserID: async function() {
-				PostService.getPostsByUserID(41)
+				const adminID = 41;
+				PostService.getPostsByUserID(adminID)
 				.then(response => {
 					this.posts = response;
 				})

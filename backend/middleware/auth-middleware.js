@@ -22,7 +22,7 @@ function verifyToken(request, response, next) {
 	});
 }
 
-function veritfyEmail(request, response, next) {
+function verifyEmail(request, response, next) {
 	const { email } = request.body;
 
 	pool.query(
@@ -44,5 +44,5 @@ function veritfyEmail(request, response, next) {
 
 module.exports = {
 	verifyToken,
-	veritfyEmail
+	verifyEmail
 };

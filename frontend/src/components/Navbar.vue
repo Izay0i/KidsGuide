@@ -9,7 +9,7 @@
 					Trang chủ
 				</b-nav-item>
 				
-				<b-nav-item>
+				<b-nav-item v-bind:to="{ name: 'PostCollection' }">
 					Các kỹ năng khác
 				</b-nav-item>
 				

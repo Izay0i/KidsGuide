@@ -37,17 +37,12 @@
 
 <script>
 	import router from '@/router';
+	import { mapGetters } from 'vuex';
 
 	import UserService from '@/services/UserService.js';
 
 	export default {
 		name: 'UserInfo',
-		props: {
-			prop_user_id: {
-				type: Number,
-				required: true
-			}
-		},
 		data: function() {
 			return {
 				user: {
@@ -104,9 +99,9 @@
 			}
 		},
 		computed: {
-			isParamUserID: function() {
-				return this.prop_user_id === parseInt(this.$route.params.id);
-			}
+			...mapGetters({
+				isParamUserID: 'isParamUserID'
+			})
 		}
 	}
 </script>

@@ -15,7 +15,7 @@ const getPostsByUserID = (request, response) => {
 	const id = parseInt(request.params.id);
 
 	pool.query(
-		'select * from posts where uid = $1 order by post_time desc;',
+		'select * from posts where uid = $1 order by post_id desc;',
 		[id],
 		(error, results) => {
 			if (error) throw error;

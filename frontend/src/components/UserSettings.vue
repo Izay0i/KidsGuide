@@ -43,12 +43,6 @@
 
 	export default {
 		name: 'UserSettings',
-		props: {
-			prop_user_id: {
-				type: Number,
-				required: true
-			}
-		},
 		data: function() {
 			return {
 				user: {

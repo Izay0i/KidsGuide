@@ -9,6 +9,7 @@ import Faq from '@/components/Faq.vue';
 import Terms from '@/components/Terms.vue';
 import UserProfile from '@/components/UserProfile.vue';
 import PostItem from '@/components/PostItem.vue';
+import PostCollection from '@/components/PostCollection.vue';
 
 Vue.use(VueRouter);
 
@@ -56,6 +57,11 @@ const routes = [
 		path: '/post/id/:id',
 		name: 'Post',
 		component: PostItem
+	},
+	{
+		path: '/posts',
+		name: 'PostCollection',
+		component: PostCollection
 	},
 	{
 		path: '/auth',

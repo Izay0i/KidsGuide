@@ -116,6 +116,10 @@
 		},
 		computed: {
 			verifyPassword: function() {
+				if (this.signup.repass.length === 0) {
+					return false;
+				}
+
 				return this.signup.password.localeCompare(this.signup.repass) === 0 ? true : false;
 			}
 		}

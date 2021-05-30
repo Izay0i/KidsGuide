@@ -60,8 +60,7 @@
 		<b-card-group v-if="cards.length">
 			<CardItem 
 				v-for="card in cards" 
-				v-bind:key="card.post_id" 
-				v-bind:prop_user_id="prop_user_id"
+				v-bind:key="card.post_time" 
 				v-bind:prop_id="card.post_id" 
 				v-bind:prop_banner="card.thumbnail" 
 				v-bind:prop_title="card.title" 
@@ -77,6 +76,7 @@
 
 <script>
 	import moment from 'moment';
+	import { mapGetters } from 'vuex';
 
 	import CardItem from '@/components/CardItem.vue';
 
@@ -84,12 +84,6 @@
 
 	export default {
 		name: 'CardControlPanel',
-		props: {
-			prop_user_id: {
-				type: Number,
-				required: true
-			}
-		},
 		components: {
 			CardItem
 		},
@@ -213,7 +207,7 @@
 			},
 			formatPostTime: function(arr) {
 				arr.forEach(
-					(item) => item.post_time = moment(item.post_time).format('DD/MM/YYYY')
+					(item) => item.post_time = moment(item.post_time).format('DD/MM/YYYY hh:mm A')
 				);
 			},
 			toggledEditButtons: function(id) {
@@ -242,9 +236,9 @@
 			isPostContentValid: function() {
 				return this.card_content.content.length ? true : false;
 			},
-			isParamUserID: function() {
-				return this.prop_user_id === parseInt(this.$route.params.id);
-			}
+			...mapGetters({
+				isParamUserID: 'isParamUserID'
+			})
 		}
 	}
 </script>

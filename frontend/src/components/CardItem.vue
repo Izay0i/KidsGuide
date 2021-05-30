@@ -1,16 +1,19 @@
 <template>
 	<div>
-		<b-card 
-			class="cards mx-auto" 
-			v-bind:title="card_content.title" 
-			v-bind:img-src="card_content.banner" 
-			img-alt="Thumbnail"
-		>
+		<b-card class="cards mx-auto shadow-lg">
+			<b-card-text class="title">
+				{{ card_content.title }}
+			</b-card-text>
+
+			<router-link v-bind:to="{ name: 'Post', params: { id } }">
+				<b-img v-bind:src="card_content.banner" fluid-grow></b-img>
+			</router-link>
+
 			<b-card-text class="content">
 				{{ card_content.content }}
 			</b-card-text>
 			
-			<b-card-text>
+			<b-card-text class="date">
 				Ngày đăng: {{ card_content.date }}
 			</b-card-text>
 
@@ -20,28 +23,19 @@
 				v-bind:key="tag"
 			>{{ tag }}</b-badge>
 
-			<div class="footer mt-5">
+			<div class="footer mt-5" v-if="isParamUserID">
 				<b-button 
 					class="mr-3 bg-warning border-0 rounded" 
-					v-on:click="updatePost" 
-					v-if="isParamUserID"
+					v-on:click="updatePost"
 				>
 					Sửa
 				</b-button>
 
 				<b-button 
 					class="mr-3 bg-danger border-0 rounded" 
-					v-on:click="deletePost" 
-					v-if="isParamUserID"
+					v-on:click="deletePost"
 				>
 					Xóa
-				</b-button>
-
-				<b-button 
-					variant="info" 
-					v-bind:to="{ name: 'Post', params: { id } }"
-				>
-					Xem bài viết
 				</b-button>
 			</div>
 		</b-card>
@@ -49,13 +43,11 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex';
+
 	export default {
 		name: 'CardItem',
 		props: {
-			prop_user_id: {
-				type: Number,
-				required: true
-			},
 			prop_id: {
 				type: Number,
 				required: true
@@ -102,9 +94,9 @@
 			}
 		},
 		computed: {
-			isParamUserID: function() {
-				return this.prop_user_id === parseInt(this.$route.params.id);
-			}
+			...mapGetters({
+				isParamUserID: 'isParamUserID'
+			})
 		}
 	};
 </script>
@@ -118,17 +110,38 @@
 		flex: 0 0 100%;
 	}
 
+	img {
+		border-radius: 10px;
+		margin-bottom: 10px;
+	}
+
 	.cards {
+		background-color: #ddb892;
 		border: 0;
 		border-radius: 20px;
 		margin-bottom: 35px;
 		max-width: 50vw;
 	}
 
+	.title {
+		color: #9c6644;
+		text-align: center;
+		font-size: 2.5rem;
+	}
+
 	.content {
+		color: #7f5539;
 		overflow: auto;
-		max-height: 30vh;
+		max-height: 20vh;
 		white-space: pre-wrap;
+	}
+
+	.date {
+		text-align: center;
+		border-radius: 20px;
+		padding: 7px;
+		background-color: #7f5539;
+		color: white;
 	}
 
 	.tags {
@@ -137,11 +150,6 @@
 
 	.footer {
 		display: flex;
-	}
-
-	.footer > :nth-last-child(1) {
-		flex: 1;
-		margin-left: auto;
 	}
 
 	@media screen and (max-width: 768px) {

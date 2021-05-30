@@ -46,7 +46,7 @@
 			getPostByID: async function() {
 				PostService.getPostByID(this.$route.params.id)
 				.then(response => {
-					response.post_time = moment(response.post_time).format('DD/MM/YYYY');
+					response.post_time = moment(response.post_time).format('DD/MM/YYYY hh:mm A');
 					this.post = response;
 				})
 				.catch(error => {

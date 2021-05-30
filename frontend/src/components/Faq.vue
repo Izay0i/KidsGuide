@@ -33,7 +33,6 @@
         },
 		created: function() {
 			this.getFaqs();
-			console.log(this.faqs);
 		},
 		methods: {
 			getFaqs: async function() {

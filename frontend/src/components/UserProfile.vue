@@ -9,14 +9,11 @@
 					v-bind:key="tab.title"
 					v-bind:title="tab.title"
 				>
-					<component 
-						v-bind:is="tab.component" 
-						v-bind:prop_user_id="userID"
-					></component>					
+					<component v-bind:is="tab.component"></component>					
 				</b-tab>
 
 				<b-tab title="Tùy chỉnh" v-if="isParamUserID">
-					<UserSettings v-bind:prop_user_id="userID" />
+					<UserSettings />
 				</b-tab>
 			</b-tabs>
 		</b-card>
@@ -24,6 +21,8 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex';
+
 	import Banner from '@/components/Banner.vue';
 	import UserInfo from '@/components/UserInfo.vue';
 	import CardControlPanel from '@/components/CardControlPanel.vue';
@@ -47,6 +46,10 @@
 		},
 		created: function() {
 			this.getUserID();
+			this.$store.dispatch('setParamUserID', {
+				uid: this.userID,
+				paramID: this.$route.params.id
+			});
 		},
 		methods: {
 			getUserID: function() {
@@ -54,12 +57,12 @@
 				if (user != null) {
 					this.userID = user.uid;
 				}
-			}
+			},
 		},
 		computed: {
-			isParamUserID: function() {
-				return this.userID === parseInt(this.$route.params.id);
-			}
+			...mapGetters({
+				isParamUserID: 'isParamUserID'
+			})
 		}
 	}
 </script>

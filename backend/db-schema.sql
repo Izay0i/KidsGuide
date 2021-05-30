@@ -33,6 +33,7 @@ create table Posts(
 	title text not null,
 	content text not null,
 	thumbnail text,
+	vid_link text,
 	post_time timestamp without time zone not null default now(),
 	tags text[],
 	favorites integer not null default 0,
