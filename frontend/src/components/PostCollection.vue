@@ -20,13 +20,15 @@
 					{{ post.title }}
 				</b-card-text>
 
-				<router-link v-bind:to="{ name: 'Post', params: { id: post.post_id } }">
+				<router-link class="link" v-bind:to="{ name: 'Post', params: { id: post.post_id } }">
+					<b-icon 
+						icon="play-btn-fill" 
+						class="icon" 
+						v-if="post.vid_url"
+					></b-icon>
+					
 					<b-img v-bind:src="post.thumbnail" fluid-grow></b-img>
 				</router-link>
-
-				<b-card-text class="content">
-					{{ post.content }}
-				</b-card-text>
 				
 				<b-card-text class="date">
 					Ngày đăng: {{ post.post_time }}
@@ -109,6 +111,20 @@
 	img {
 		border-radius: 10px;
 		margin-bottom: 10px;
+	}
+
+	.link {
+		position: relative;
+	}
+
+	.link .icon {
+		position: absolute;
+		transform: scale(1.5) translate(50%, 50%);
+	}
+
+	.link > * {
+		text-decoration: none;
+		color: white;
 	}
 
 	.search-post {

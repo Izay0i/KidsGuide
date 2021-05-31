@@ -56,11 +56,12 @@ const getPostByTitle = (request, response) => {
 
 const createPost = (request, response) => {
 	const { uid, title, content, thumbnail, tags } = request.body;
+	let vid_url = request.body.vid_url.replace('watch?v=', 'embed/');
 
 	pool.query(
-		`insert into posts (uid, title, content, thumbnail, tags) 
-		values ($1, $2, $3, $4, $5) returning post_id;`,
-		[uid, title, content, thumbnail, tags],
+		`insert into posts (uid, title, content, thumbnail, vid_url, tags) 
+		values ($1, $2, $3, $4, $5, $6) returning post_id;`,
+		[uid, title, content, thumbnail, vid_url, tags],
 		(error, results) => {
 			if (error) throw error;
 
@@ -71,12 +72,13 @@ const createPost = (request, response) => {
 
 const updatePost = (request, response) => {
 	const { id, title, content, thumbnail, tags } = request.body;
+	let vid_url = request.body.vid_url.replace('watch?v=', 'embed/');
 
 	pool.query(
 		`update posts 
-		set title = $1, content = $2, thumbnail = $3, tags = $4, post_time = now() 
-		where post_id = $5;`,
-		[title, content, thumbnail, tags, id],
+		set title = $1, content = $2, thumbnail = $3, vid_url = $4, tags = $5, post_time = now() 
+		where post_id = $6;`,
+		[title, content, thumbnail, vid_url, tags, id],
 		(error, results) => {
 			if (error) throw error;
 

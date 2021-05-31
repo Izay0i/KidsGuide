@@ -6,6 +6,14 @@
 			v-bind:src="post.thumbnail"
 		></b-img-lazy>
 
+		<b-embed 
+			type="iframe" 
+			aspect="16by9" 
+			allowfullscreen 
+			v-if="post.vid_url"
+			v-bind:src="post.vid_url"
+		></b-embed>
+
 		<div class="body">
 			<h1>{{ post.title }}</h1>
 
@@ -34,6 +42,7 @@
 					title: '',
 					content: '',
 					thumbnail: '',
+					vid_url: '',
 					post_time: '',
 					tags: []
 				}

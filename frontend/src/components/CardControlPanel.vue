@@ -3,6 +3,11 @@
 		<div v-if="isParamUserID">
 			<b-form-group>
 				<b-form-input 
+					placeholder="Link video (Nếu có)" 
+					v-model="card_content.vid_url"
+				></b-form-input>
+				
+				<b-form-input 
 					placeholder="Ảnh bìa" 
 					v-model="card_content.thumbnail"
 					v-bind:state="isPostImageValid"
@@ -16,7 +21,7 @@
 					
 				<b-form-textarea 
 					placeholder="Nội dung" 
-					size="lg" 
+					rows="16" 
 					v-model="card_content.content" 
 					v-bind:state="isPostContentValid"
 				></b-form-textarea>
@@ -63,6 +68,7 @@
 				v-bind:key="card.post_time" 
 				v-bind:prop_id="card.post_id" 
 				v-bind:prop_banner="card.thumbnail" 
+				v-bind:prop_vid="card.vid_url" 
 				v-bind:prop_title="card.title" 
 				v-bind:prop_content="card.content" 
 				v-bind:prop_date="card.post_time" 
@@ -96,7 +102,8 @@
 				id: '',
 				card_content: {
 					title: '',
-					thumbnail: '',	
+					thumbnail: '',
+					vid_url: '',
 					content: '',
 					tags: []
 				},
@@ -155,6 +162,7 @@
 					title: this.card_content.title,
 					content: this.card_content.content,
 					thumbnail: this.card_content.thumbnail,
+					vid_url: this.card_content.vid_url,
 					tags: this.card_content.tags
 				};
 
@@ -181,6 +189,7 @@
 					title: this.card_content.title,
 					content: this.card_content.content,
 					thumbnail: this.card_content.thumbnail,
+					vid_url: this.card_content.vid_url,
 					tags: this.card_content.tags
 				};
 
@@ -218,6 +227,7 @@
 			clearInputs: function() {
 				this.toggled = false;
 				this.card_content.thumbnail = '';
+				this.card_content.vid_url = '';
 				this.card_content.title = '';
 				this.card_content.content = '';
 				this.card_content.tags = [];

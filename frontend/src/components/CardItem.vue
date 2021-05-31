@@ -5,7 +5,13 @@
 				{{ card_content.title }}
 			</b-card-text>
 
-			<router-link v-bind:to="{ name: 'Post', params: { id } }">
+			<router-link class="link" v-bind:to="{ name: 'Post', params: { id } }">
+				<b-icon 
+					icon="play-btn-fill" 
+					class="icon" 
+					v-if="card_content.vid"
+				></b-icon>
+				
 				<b-img v-bind:src="card_content.banner" fluid-grow></b-img>
 			</router-link>
 
@@ -56,6 +62,9 @@
 				type: String,
 				required: true
 			},
+			prop_vid: {
+				type: String
+			},
 			prop_title: {
 				type: String,
 				required: true
@@ -77,6 +86,7 @@
 				id: this.prop_id,
 				card_content: {
 					banner: this.prop_banner,
+					vid: this.prop_vid,
 					title: this.prop_title,
 					content: this.prop_content,
 					date: this.prop_date,
@@ -87,6 +97,11 @@
 		methods: {
 			updatePost: function() {
 				this.$emit('update-card', this.id);
+				window.scrollTo({
+					top: 0,
+					left: 0,
+					behavior: 'smooth'
+				});
 			},
 			deletePost: function() {
 				//calling delete-card event from AdminDashboard.vue with a value of this.id
@@ -113,6 +128,20 @@
 	img {
 		border-radius: 10px;
 		margin-bottom: 10px;
+	}
+
+	.link {
+		position: relative;
+	}
+
+	.link .icon {
+		position: absolute;
+		transform: scale(1.5) translate(50%, 50%);
+	}
+
+	.link > * {
+		text-decoration: none;
+		color: white;
 	}
 
 	.cards {

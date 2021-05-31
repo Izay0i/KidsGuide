@@ -48,7 +48,6 @@ export default new Vuex.Store({
 			state.commit('setAvatar', payload);
 		}
 	},
-	modules: {},
 	getters: {
 		isAuthenticated: state => state.authenticated,
 		isAdmin: state => state.isAdmin,
