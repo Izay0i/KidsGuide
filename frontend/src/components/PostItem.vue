@@ -1,21 +1,21 @@
 <template>
 	<div>
-		<b-img-lazy 
-			fluid-grow 
-			alt="Thumbnail" 
-			v-bind:src="post.thumbnail"
-		></b-img-lazy>
-
-		<b-embed 
-			type="iframe" 
-			aspect="16by9" 
-			allowfullscreen 
-			v-if="post.vid_url"
-			v-bind:src="post.vid_url"
-		></b-embed>
-
-		<div class="body">
+		<div class="body shadow-lg">
 			<h1>{{ post.title }}</h1>
+
+			<b-img-lazy 
+				fluid-grow 
+				alt="Thumbnail" 
+				v-bind:src="post.thumbnail"
+			></b-img-lazy>
+
+			<b-embed 
+				type="iframe" 
+				aspect="16by9" 
+				allowfullscreen 
+				v-if="post.vid_url"
+				v-bind:src="post.vid_url"
+			></b-embed>
 
 			<p>Ngày đăng: {{ post.post_time }}</p>
 			<p>{{ post.content }}</p>
@@ -87,10 +87,23 @@
 
 	.body {
 		background-color: #cfb997;
+		margin-left: 25%;
+		margin-right: 25%;
+		margin-top: 1%;
 		padding: 20px;
+		border-radius: 20px;
 	}
 
 	.tags {
 		margin-right: 5px;
+	}
+
+	@media screen and (max-width: 1024px) {
+		.body {
+			margin: 0;
+			border-radius: 0;
+			border-bottom-left-radius: 20px;
+			border-bottom-right-radius: 20px;
+		}
 	}
 </style>

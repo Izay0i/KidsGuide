@@ -2,7 +2,7 @@ const pool = require('../db-connection.js');
 
 const getPosts = (request, response) => {
 	pool.query(
-		'select * from posts order by post_time desc;',
+		'select * from posts order by post_id desc;',
 		(error, results) => {
 			if (error) throw error;
 

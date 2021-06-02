@@ -1,20 +1,34 @@
 <template>
 	<div class="profile shadow-lg">
 		<div class="avatar-frame">
+			<b-img class="tape" src="../assets/tape.png"></b-img>
+			
 			<b-avatar 
 				rounded 
 				size="20.2rem" 
 				class="avatar shadow-lg" 
 				v-bind:src="user.avatar"
 			></b-avatar>
-			<b-img class="tape" src="../assets/tape.png"></b-img>
 		</div>
 		
 		<b-form class="form w-100 m-5">
-			<b-form-group label="Ảnh đại diện:" v-if="isParamUserID">
-				<b-form-file accept=".jpg, .png, .gif"></b-form-file>
-			</b-form-group>
-			
+			<div class="avatar-input">
+				<b-form-group label="Ảnh đại diện:" v-if="isParamUserID">
+					<b-form-file 
+						accept=".jpg, .png, .gif" 
+						v-model="form_file"
+					></b-form-file>
+				</b-form-group>
+				
+				<b-button 
+					variant="info" 
+					v-on:click="updateUserAvatar" 
+					v-if="isParamUserID"
+				>
+					Cập nhật ảnh đại diện
+				</b-button>
+			</div>
+
 			<b-form-group
 				v-for="form in form_groups" 
 				v-bind:key="form.label" 
@@ -40,6 +54,7 @@
 	import { mapGetters } from 'vuex';
 
 	import UserService from '@/services/UserService.js';
+	import ImageService from '@/services/ImageService.js';
 
 	export default {
 		name: 'UserInfo',
@@ -51,6 +66,7 @@
 					phone_numb: '',
 					avatar: ''
 				},
+				form_file: null,
 				form_groups: [
 					{ label: 'Họ tên:', model: 'name' },
 					{ label: 'Địa chỉ:', model: 'address' },
@@ -70,6 +86,32 @@
 				.catch(error => {
 					console.log(error);
 				});
+			},
+			updateUserAvatar: async function() {
+				if (!this.isFileImageValid) {
+					return;
+				}
+
+				const user = JSON.parse(localStorage.getItem('user'));
+				let formData = new FormData();
+				formData.append('type', 'users');
+				formData.append('id', user.uid);
+				formData.append('avatar', this.form_file);
+
+				ImageService.updateImage(formData)
+				.then(response => {
+					this.user.avatar = response.path;
+
+					localStorage.setItem('user', JSON.stringify({ 
+						...user,
+						avatar: response.path
+					}));
+					
+					router.go(0);
+				})
+				.catch(error => {
+					console.log(error);
+				})
 			},
 			updateUserDetails: async function() {
 				if (!this.user.name.length || 
@@ -99,6 +141,13 @@
 			}
 		},
 		computed: {
+			isFileImageValid: function() {
+				if (this.form_file == null) {
+					return false;
+				}
+
+				return true;
+			},
 			...mapGetters({
 				isParamUserID: 'isParamUserID'
 			})
@@ -132,20 +181,33 @@
 		position: relative;
 	}
 
+	.tape {
+		position: absolute;
+		right: 0;
+		transform: scale(0.2) rotate(340deg) translate(40%, -200%);
+		z-index: 10000;
+	}
+
 	.avatar {
 		border: 20px solid white;
 		transform: rotate(358deg);
 	}
 
-	.tape {
-		transform: scale(0.2) rotate(340deg);
-		position: absolute;
-		top: -30%;
-		left: -85%;
-	}
-
 	.form {
 		font-style: italic;
+	}
+
+	.avatar-input {
+		display: flex;
+		align-items: center;
+	}
+
+	.avatar-input > * {
+		margin-right: 20px;
+	}
+
+	.avatar-input > :nth-last-child(1) {
+		margin-top: 14px;
 	}
 
 	@media screen and (max-width: 768px) { /*iPad screen size*/

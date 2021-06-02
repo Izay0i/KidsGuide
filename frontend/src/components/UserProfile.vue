@@ -2,7 +2,7 @@
 	<div>
 		<Banner />
 
-		<b-card no-body>
+		<b-card no-body class="cards">
 			<b-tabs card>
 				<b-tab
 					v-for="tab in tabs"
@@ -68,7 +68,13 @@
 </script>
 
 <style scoped>
-	.tabs {
-		flex-direction: column;
+	/* .cards {
+		margin: 15%;
 	}
+
+	@media screen and (max-width: 1024px) {
+		.cards {
+			margin: 0;
+		}
+	} */
 </style>

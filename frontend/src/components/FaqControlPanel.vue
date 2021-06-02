@@ -43,7 +43,7 @@
 		<b-card-group v-if="faqs.length">
 			<FaqItem
 				v-for="faq in faqs"
-				v-bind:key="faq.faq_id"
+				v-bind:key="faq.faq_id + faq.content.question + faq.content.answer"
 				v-bind:prop_id="faq.faq_id"
 				v-bind:prop_question="faq.content.question"
 				v-bind:prop_answer="faq.content.answer"

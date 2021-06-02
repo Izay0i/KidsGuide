@@ -14,7 +14,7 @@
 		<b-card-group columns class="cards">
 			<b-card 
 				v-for="post in posts" 
-				v-bind:key="post.post_time"
+				v-bind:key="post.post_id + post.post_time"
 			>
 				<b-card-text class="title">
 					{{ post.title }}
@@ -53,12 +53,17 @@
 		name: 'PostCollection',
 		data: function() {
 			return {
+				timer: '',
 				search_post: '',
 				posts: []
 			};
 		},
 		created: function() {
 			this.getPosts();
+			this.timer = setInterval(this.getPosts, 10000);
+		},
+		beforeDestroy: function() {
+			this.cancelAutoUpdate();
 		},
 		methods: {
 			getPosts: async function() {
@@ -84,6 +89,9 @@
 				.catch(error => {
 					console.log(error);
 				});
+			},
+			cancelAutoUpdate: function() {
+				clearInterval(this.timer);
 			},
 			formatPostTime: function(arr) {
 				arr.forEach(
@@ -111,6 +119,10 @@
 	img {
 		border-radius: 10px;
 		margin-bottom: 10px;
+	}
+
+	.cards > * {
+		border-radius: 20px;
 	}
 
 	.link {

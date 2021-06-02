@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const pathUtil = require('../utilities/path-util.js');
 const pool = require('../db-connection.js');
 
 const saltRounds = 10;
@@ -29,6 +30,7 @@ const getUserByID = (request, response) => {
 		(error, results) => {
 			if (error) throw error;
 
+			results.rows[0].avatar = pathUtil.appendDNToFilePath(request, results.rows[0].avatar);
 			response.status(200).json(results.rows[0]);
 		}
 	);
@@ -84,22 +86,22 @@ const updateUserDetails = (request, response) => {
 		uid, 
 		name, 
 		address, 
-		phone_numb, 
-		avatar 
+		phone_numb,
+		avatar
 	} = request.body;
 
 	pool.query(
 		`update userdetails 
-		set name = $1, address = $2, phone_numb = $3, avatar = $4 
-		where uid = $5;`,
-		[name, address, phone_numb, avatar, uid],
+		set name = $1, address = $2, phone_numb = $3 
+		where uid = $4;`,
+		[name, address, phone_numb, uid],
 		(error, results) => {
 			if (error) throw error;
 
 			response.status(200).json({
 				name, 
 				address, 
-				phone_numb, 
+				phone_numb,
 				avatar
 			});
 		}

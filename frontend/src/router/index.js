@@ -81,7 +81,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
 	if (to.matched.some(record => record.meta.requiresAuth)) {
 		if (localStorage.getItem('user') == null) {
-			next({ name: 'Home' });
+			next({ name: 'AuthForm' });
 		}
 		else {
 			const user = JSON.parse(localStorage.getItem('user'));

@@ -10,18 +10,26 @@
         >
             <b-carousel-slide 
 				v-for="post in posts" 
-				v-bind:key="post.title" 
-                v-bind:caption="post.title"
+				v-bind:key="post.title"
             >
 				<template #img>
-					<router-link
+					<p class="caption">{{ post.title }}</p>
+
+					<router-link 
+						class="link" 
 						v-bind:to="{ name: 'Post', params: { id: post.post_id } }"
 					>
+						<b-icon 
+							icon="play-btn-fill" 
+							class="icon" 
+							v-if="post.vid_url"
+						></b-icon>
+
 						<img 
 							class="d-block img-fluid w-100"
 							v-bind:src="post.thumbnail"
 						/>
-					</router-link>					
+					</router-link>
 				</template>				
 			</b-carousel-slide>
         </b-carousel>
@@ -71,7 +79,46 @@
         padding: 0px 10px; 
     }
 
+	img {
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
+
 	.carousel {
+		padding: 5%;
 		text-shadow: 1px 1px 2px #333;
+	}
+
+	.link {
+		position: relative;
+	}
+
+	.link .icon {
+		z-index: 10000;
+		position: absolute;
+		transform: scale(1.5) translate(50%, 50%);
+	}
+
+	.link > * {
+		text-decoration: none;
+		color: white;
+	}
+
+	.caption {
+		margin: 0;
+		text-align: center;
+		text-shadow: none;
+		font-size: 1.5rem;
+		background-color: #cfb997;
+		color: #9c6644;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+	}
+
+	@media screen and (max-width: 1024px) {
+		.carousel {
+			margin: 0;
+			padding: 0;
+		}
 	}
 </style>

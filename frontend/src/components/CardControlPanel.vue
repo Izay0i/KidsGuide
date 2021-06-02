@@ -3,7 +3,7 @@
 		<div v-if="isParamUserID">
 			<b-form-group>
 				<b-form-input 
-					placeholder="Link video (Nếu có)" 
+					placeholder="Đường dẫn video (Nếu có)" 
 					v-model="card_content.vid_url"
 				></b-form-input>
 				
@@ -65,7 +65,7 @@
 		<b-card-group v-if="cards.length">
 			<CardItem 
 				v-for="card in cards" 
-				v-bind:key="card.post_time" 
+				v-bind:key="card.post_id + card.post_time" 
 				v-bind:prop_id="card.post_id" 
 				v-bind:prop_banner="card.thumbnail" 
 				v-bind:prop_vid="card.vid_url" 
@@ -267,7 +267,7 @@
 		box-shadow: none;
 		margin-bottom: 5px;
 	}
-
+	
 	.post-group {
 		border-radius: 20px;
 		padding: 15px;

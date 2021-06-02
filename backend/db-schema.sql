@@ -32,7 +32,7 @@ create table Posts(
 	uid integer not null,
 	title text not null,
 	content text not null,
-	thumbnail text,
+	thumbnail text not null,
 	vid_url text,
 	post_time timestamp without time zone not null default now(),
 	tags text[],
@@ -52,19 +52,20 @@ create table Favorites(
 
 create table Quizzes(
 	quiz_id serial not null,
-	uid integer not null,
-	title text not null,
+	post_id integer not null,
 	content jsonb not null,
 	post_time timestamp without time zone not null default now(),
 	constraint pk_quiz primary key(quiz_id),
-	constraint fk_uid foreign key(uid) references Users(uid)
+	constraint fk_post foreign key(post_id) references Posts(post_id)
 );
 
 create table Reports(
 	report_id serial not null,
 	uid integer not null,
+	post_id integer not null,
 	reason text not null,
 	report_time timestamp without time zone not null default now(),
 	constraint pk_report primary key(report_id),
-	constraint fk_uid foreign key(uid) references Users(uid)
+	constraint fk_uid foreign key(uid) references Users(uid),
+	constraint fk_post foreign key(post_id) references Posts(post_id)
 );

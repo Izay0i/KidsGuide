@@ -149,7 +149,7 @@
 		border: 0;
 		border-radius: 20px;
 		margin-bottom: 35px;
-		max-width: 50vw;
+		max-width: 38vw;
 	}
 
 	.title {

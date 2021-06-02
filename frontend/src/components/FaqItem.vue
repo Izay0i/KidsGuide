@@ -56,6 +56,11 @@
 		methods: {
 			updateFaq: function() {
 				this.$emit('update-faq', this.id);
+				window.scrollTo({
+					top: 0,
+					left: 0,
+					behavior: 'smooth'
+				});
 			},
 			deleteFaq: function() {
 				this.$emit('delete-faq', this.id);
