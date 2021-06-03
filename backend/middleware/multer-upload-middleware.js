@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
 		fs.access(dir, function(error) {
 			if (error) {
 				console.log('Directory does not exist');
-				return fs.mkdir(dir, (error) => callback(error, dir));
+				return fs.mkdir(dir, { recursive: true }, (error) => callback(error, dir));
 			}
 			else {
 				callback(null, dir);
@@ -22,6 +22,10 @@ const storage = multer.diskStorage({
 		callback(null, file.fieldname + '-' + Date.now() + '.' + extension);
 	}
 });
-const upload = multer({ storage: storage });
+const maxSize = 1 * 1024 * 1024; //MB
+const upload = multer({ 
+	storage: storage, 
+	limits: { fileSize: maxSize }
+});
 
 module.exports = upload;

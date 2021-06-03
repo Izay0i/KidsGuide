@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 const bcrypt = require('bcrypt');
+const pathUtil = require('../utilities/path-util.js');
 const pool = require('../db-connection.js');
 
 const expireTime = '24h';
@@ -79,7 +80,7 @@ const signIn = (request, response) => {
 			response.status(200).json({
 				uid: results.rows[0].uid,
 				role: results.rows[0].role,
-				avatar: results.rows[0].avatar,
+				avatar: pathUtil.appendDNToFilePath(request, results.rows[0].avatar),
 				accessToken: token
 			});
 		}

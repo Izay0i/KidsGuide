@@ -2,15 +2,23 @@
 	<div class="post-group shadow-lg">
 		<div v-if="isParamUserID">
 			<b-form-group>
+				<div class="thumbnail">
+					<b-img 
+						v-bind="img_props" 
+						v-bind:src="img_preview"
+					></b-img>
+
+					<b-form-file 
+						accept=".jpg, .png, .gif" 
+						v-model="form_file" 
+						v-bind:state="isPostImageValid" 
+						v-on:change="onFormFileChange"
+					></b-form-file>
+				</div>
+
 				<b-form-input 
 					placeholder="Đường dẫn video (Nếu có)" 
 					v-model="card_content.vid_url"
-				></b-form-input>
-				
-				<b-form-input 
-					placeholder="Ảnh bìa" 
-					v-model="card_content.thumbnail"
-					v-bind:state="isPostImageValid"
 				></b-form-input>
 
 				<b-form-input 
@@ -98,11 +106,13 @@
 
 			return {
 				tagsLimit,
+				img_props: { width: 200 }, //bind to b-img
+				img_preview: '',
 				search_post: '',
-				id: '',
+				id: '', //post_id
+				form_file: null,
 				card_content: {
 					title: '',
-					thumbnail: '',
 					vid_url: '',
 					content: '',
 					tags: []
@@ -157,16 +167,17 @@
 				}
 				
 				const user = JSON.parse(localStorage.getItem('user'));
-				const payload = {
-					uid: user.uid,
-					title: this.card_content.title,
-					content: this.card_content.content,
-					thumbnail: this.card_content.thumbnail,
-					vid_url: this.card_content.vid_url,
-					tags: this.card_content.tags
-				};
 
-				PostService.createPost(payload)
+				let formData = new FormData();
+				formData.append('type', 'posts');
+				formData.append('id', user.uid);
+				formData.append('thumbnail', this.form_file);
+				formData.append('title', this.card_content.title);
+				formData.append('content', this.card_content.content);
+				formData.append('vid_url', this.card_content.vid_url);
+				formData.append('tags', JSON.stringify(this.card_content.tags)); //array needs to be parse as string
+
+				PostService.createPost(formData)
 				.then(response => {
 					console.log(response);
 					this.clearInputs();
@@ -183,17 +194,20 @@
 				{
 					return;
 				}
-				
-				const payload = {
-					id: this.id,
-					title: this.card_content.title,
-					content: this.card_content.content,
-					thumbnail: this.card_content.thumbnail,
-					vid_url: this.card_content.vid_url,
-					tags: this.card_content.tags
-				};
 
-				PostService.updatePost(payload)
+				const user = JSON.parse(localStorage.getItem('user'));
+
+				let formData = new FormData();
+				formData.append('type', 'posts');
+				formData.append('id', user.uid);
+				formData.append('post_id', this.id);
+				formData.append('thumbnail', this.form_file);
+				formData.append('title', this.card_content.title);
+				formData.append('content', this.card_content.content);
+				formData.append('vid_url', this.card_content.vid_url);
+				formData.append('tags', JSON.stringify(this.card_content.tags));
+
+				PostService.updatePost(formData)
 				.then(response => {
 					console.log(response);
 					this.clearInputs();
@@ -219,6 +233,16 @@
 					(item) => item.post_time = moment(item.post_time).format('DD/MM/YYYY hh:mm A')
 				);
 			},
+			onFormFileChange: function(e) {
+				const file = e.target.files[0];
+				if (typeof file !== 'undefined') {
+					this.img_preview = URL.createObjectURL(file);
+				}
+				else {
+					URL.revokeObjectURL(this.img_preview);
+					this.img_preview = '';
+				}
+			},
 			toggledEditButtons: function(id) {
 				this.toggled = true;
 				this.id = id;
@@ -231,6 +255,10 @@
 				this.card_content.title = '';
 				this.card_content.content = '';
 				this.card_content.tags = [];
+
+				URL.revokeObjectURL(this.form_file);
+				this.form_file = null;
+				this.img_preview = '';
 			}
 		},
 		computed: {
@@ -238,7 +266,7 @@
 				return this.search_post.length ? true : false;
 			},
 			isPostImageValid: function() {
-				return this.card_content.thumbnail.length ? true : false;
+				return this.form_file != null;
 			},
 			isPostTitleValid: function() {
 				return this.card_content.title.length ? true : false;
@@ -275,12 +303,18 @@
 		background-color: #cfb997;
 	}
 
-	.post-group .search-post {
+	.thumbnail {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.search-post {
 		display: flex;
 		justify-content: space-between;
 	}
 
-	.post-group .extra-btns > * {
+	.extra-btns > * {
 		margin-right: 10px;
 	}
 </style>

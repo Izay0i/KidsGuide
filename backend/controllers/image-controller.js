@@ -1,5 +1,5 @@
 const fs = require('fs');
-const paths = require('path');
+const path = require('path');
 const pathUtil = require('../utilities/path-util.js');
 const pool = require('../db-connection.js');
 
@@ -47,7 +47,7 @@ const insertImage = (request, response) => {
 
 const updateImage = (request, response) => {
 	const { id } = request.body;
-	let path = request.file.path.replace(/\\/g, '/');
+	let avatarPath = request.file.path.replace(/\\/g, '//');
 
 	(async () => {
 		const client = await pool.connect();
@@ -56,8 +56,9 @@ const updateImage = (request, response) => {
 				'select avatar from userdetails where uid = $1;', 
 				[id]
 			);
-			const avatarDir = paths.resolve(results.rows[0].avatar);
+			const avatarDir = path.resolve(results.rows[0].avatar);
 
+			//if the avatar has been deleted or is an url then skip the deletion
 			fs.access(avatarDir, (error) => {
 				if (error) {
 					console.log(error);
@@ -71,12 +72,12 @@ const updateImage = (request, response) => {
 
 			results = await client.query(
 				'update userdetails set avatar = $1 where uid = $2;',
-				[path, id]
+				[avatarPath, id]
 			);
 
 			response.status(200).json({
 				id,
-				path: pathUtil.appendDNToFilePath(request, path)
+				path: pathUtil.appendDNToFilePath(request, avatarPath)
 			});
 		}
 		finally {
