@@ -1,11 +1,11 @@
 <template>
 	<div class="post-group shadow-lg">
 		<div v-if="isParamUserID">
-			<b-form-group>
+			<b-form-group label="Bài viết:">
 				<div class="thumbnail">
 					<b-img 
 						v-bind="img_props" 
-						v-bind:src="img_preview"
+						v-bind:src="card_content.thumbnail"
 					></b-img>
 
 					<b-form-file 
@@ -16,10 +16,17 @@
 					></b-form-file>
 				</div>
 
-				<b-form-input 
-					placeholder="Đường dẫn video (Nếu có)" 
-					v-model="card_content.vid_url"
-				></b-form-input>
+				<div class="my-5">
+					<b-form-input 
+						placeholder="Đường dẫn video (Nếu có)" 
+						v-model="card_content.vid_url"
+					></b-form-input>
+
+					<link-prevue 
+						cardWidth="100%" 
+						v-bind:url="card_content.vid_url"
+					></link-prevue>
+				</div>
 
 				<b-form-input 
 					placeholder="Tiêu đề" 
@@ -43,16 +50,32 @@
 				></b-form-tags>
 			</b-form-group>
 
-			<b-button-group class="mb-3">
+			<b-form-checkbox 
+				switch size="lg" 
+				class="mb-3" 
+				v-model="quizEnabled"
+			>
+				Tạo bài trắc nghiệm (tùy chọn)
+			</b-form-checkbox>
+
+			<b-form-group label="Trắc nghiệm:" v-show="quizEnabled">
+				<QuizInputSection 
+					class="mb-3" 
+					v-for="index in 5" 
+					v-bind:key="index"
+				/>
+			</b-form-group>
+
+			<b-button-group class="my-3">
 				<b-button 
 					class="mr-3 bg-success border-0 rounded" 
 					v-on:click="addPost" 
-					v-show="!toggled"
+					v-show="!editEnabled"
 				>
 					Thêm
 				</b-button>
 
-				<div class="extra-btns" v-show="toggled">
+				<div class="extra-btns" v-show="editEnabled">
 					<b-button variant="warning" v-on:click="updatePost">Sửa</b-button>
 					<b-button variant="danger" v-on:click="clearInputs">Hủy</b-button>
 				</div>
@@ -81,17 +104,31 @@
 				v-bind:prop_content="card.content" 
 				v-bind:prop_date="card.post_time" 
 				v-bind:prop_tags="card.tags" 
-				v-on:update-card="toggledEditButtons"
-				v-on:delete-card="deletePost"
+				v-on:update-card="toggleEditButtons"
+				v-on:delete-card="confirmDeletion"
 			/>			
 		</b-card-group>
+
+		<!--Pop up to confirm deletion-->
+		<div>
+			<b-modal 
+				id="del-pop-up" 
+				title="Bạn có chắc chắn muốn xóa bài viết?" 
+				ok-title="Có" 
+				ok-variant="danger" 
+				cancel-title="Không" 
+				v-on:ok="deletePost"
+			></b-modal>
+		</div>
 	</div>
 </template>
 
 <script>
 	import moment from 'moment';
+	import LinkPrevue from 'link-prevue';
 	import { mapGetters } from 'vuex';
 
+	import QuizInputSection from '@/components/QuizInputSection.vue';
 	import CardItem from '@/components/CardItem.vue';
 
 	import PostService from '@/services/PostService.js';
@@ -99,6 +136,8 @@
 	export default {
 		name: 'CardControlPanel',
 		components: {
+			LinkPrevue,
+			QuizInputSection,
 			CardItem
 		},
 		data: function() {
@@ -106,19 +145,25 @@
 
 			return {
 				tagsLimit,
-				img_props: { width: 200 }, //bind to b-img
-				img_preview: '',
+				img_props: { width: '500px' }, //bind to b-img
 				search_post: '',
-				id: '', //post_id
 				form_file: null,
-				card_content: {
+				vid_url_content: {
 					title: '',
+					description: '',
+					images: []
+				},
+				card_content: {
+					post_id: -1,
+					title: '',
+					thumbnail: '',
 					vid_url: '',
 					content: '',
 					tags: []
 				},
 				cards: [],
-				toggled: false
+				editEnabled: false,
+				quizEnabled: false
 			};
 		},
 		mounted: function() {
@@ -126,8 +171,9 @@
 		},
 		methods: {
 			getPostByID: async function() {
-				PostService.getPostByID(this.id)
+				PostService.getPostByID(this.card_content.post_id)
 				.then(response => {
+					console.log(response.thumbnail);
 					this.card_content = response;
 				})
 				.catch(error => {
@@ -200,7 +246,7 @@
 				let formData = new FormData();
 				formData.append('type', 'posts');
 				formData.append('id', user.uid);
-				formData.append('post_id', this.id);
+				formData.append('post_id', this.card_content.post_id);
 				formData.append('thumbnail', this.form_file);
 				formData.append('title', this.card_content.title);
 				formData.append('content', this.card_content.content);
@@ -217,8 +263,8 @@
 					console.log(error);
 				});
 			},
-			deletePost: function(id) {
-				PostService.deletePost(id)
+			deletePost: function() {
+				PostService.deletePost(this.card_content.post_id)
 				.then(response => {
 					console.log(response);
 					this.clearInputs();
@@ -233,23 +279,27 @@
 					(item) => item.post_time = moment(item.post_time).format('DD/MM/YYYY hh:mm A')
 				);
 			},
-			onFormFileChange: function(e) {
-				const file = e.target.files[0];
+			onFormFileChange: function(event) {
+				const file = event.target.files[0];
 				if (typeof file !== 'undefined') {
-					this.img_preview = URL.createObjectURL(file);
+					this.card_content.thumbnail = URL.createObjectURL(file);
 				}
 				else {
-					URL.revokeObjectURL(this.img_preview);
-					this.img_preview = '';
+					URL.revokeObjectURL(this.card_content.thumbnail);
+					this.card_content.thumbnail = '';
 				}
 			},
-			toggledEditButtons: function(id) {
-				this.toggled = true;
-				this.id = id;
+			toggleEditButtons: function(id) {
+				this.editEnabled = true;
+				this.card_content.post_id = id;
 				this.getPostByID();
 			},
+			confirmDeletion: function(id) {
+				this.card_content.post_id = id;
+				this.$bvModal.show('del-pop-up');
+			},
 			clearInputs: function() {
-				this.toggled = false;
+				this.editEnabled = false;
 				this.card_content.thumbnail = '';
 				this.card_content.vid_url = '';
 				this.card_content.title = '';
@@ -258,21 +308,20 @@
 
 				URL.revokeObjectURL(this.form_file);
 				this.form_file = null;
-				this.img_preview = '';
 			}
 		},
 		computed: {
 			isSearchItemPostValid: function() {
-				return this.search_post.length ? true : false;
+				return this.search_post.length > 0;
 			},
 			isPostImageValid: function() {
-				return this.form_file != null;
+				return this.card_content.thumbnail.length > 0;
 			},
 			isPostTitleValid: function() {
-				return this.card_content.title.length ? true : false;
+				return this.card_content.title.length > 0;
 			},
 			isPostContentValid: function() {
-				return this.card_content.content.length ? true : false;
+				return this.card_content.content.length > 0;
 			},
 			...mapGetters({
 				isParamUserID: 'isParamUserID'
@@ -295,7 +344,7 @@
 		box-shadow: none;
 		margin-bottom: 5px;
 	}
-	
+
 	.post-group {
 		border-radius: 20px;
 		padding: 15px;
@@ -307,6 +356,11 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+
+	.thumbnail > :first-child {
+		margin-bottom: 15px;
+		border-radius: 5px;
 	}
 
 	.search-post {

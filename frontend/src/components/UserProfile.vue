@@ -38,8 +38,7 @@
 			return {
 				tabs: [
 					{ component: UserInfo, title: 'Thông tin' },
-					{ component: CardControlPanel, title: 'Bài viết' },
-					{ component: '', title: 'Bài kiểm tra' }
+					{ component: CardControlPanel, title: 'Bài viết' }
 				],
 				userID: -1
 			};

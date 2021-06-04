@@ -108,8 +108,11 @@ const createPost = (request, response) => {
 	 */
 const updatePost = (request, response) => {
 	const { post_id, title, content, tags } = request.body;
-	let thumbnail = request.file.path.replace(/\\/g, '//');
 	let vid_url = request.body.vid_url.replace('watch?v=', 'embed/');
+	let thumbnail = '';
+	if (request.file) {
+		thumbnail = request.file.path.replace(/\\/g, '//');
+	}
 
 	(async () => {
 		const client = await pool.connect();
@@ -118,18 +121,26 @@ const updatePost = (request, response) => {
 				`select thumbnail from posts where post_id = $1`,
 				[post_id]
 			);
-			const thumbnailDir = path.resolve(results.rows[0].thumbnail);
+			
+			if (request.file) {
+				const thumbnailDir = path.resolve(results.rows[0].thumbnail);
 
-			fs.access(thumbnailDir, (error) => {
-				if (error) {
-					console.log(error);
-				}
-				else {
-					fs.unlink(thumbnailDir, (error) => {
-						if (error) throw error;
-					});
-				}
-			});
+				fs.access(thumbnailDir, (error) => {
+					if (error) {
+						console.log(error);
+					}
+					else {
+						fs.unlink(thumbnailDir, (error) => {
+							if (error) {
+								console.log(error);
+							}
+						});
+					}
+				});
+			}
+			else {
+				thumbnail = results.rows[0].thumbnail;
+			}
 
 			results = await client.query(
 				`update posts 
@@ -159,9 +170,16 @@ const deletePost = (request, response) => {
 			const thumbnailDir = path.resolve(results.rows[0].thumbnail);
 
 			fs.access(thumbnailDir, (error) => {
-				fs.unlink(thumbnailDir, (error) => {
-					if (error) throw error;
-				});
+				if (error) {
+					console.log(error);
+				}
+				else {
+					fs.unlink(thumbnailDir, (error) => {
+						if (error) {
+							console.log(error);
+						}
+					});
+				}
 			});
 
 			results = await client.query(

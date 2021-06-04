@@ -9,7 +9,7 @@ const postRouter = require('./routes/post');
 const faqRouter = require('./routes/faq');
 const imageRouter = require('./routes/image');
 
-const whiteList = ['http://localhost:8080', 'https://imgur.com', 'https://www.youtube.com'];
+const whiteList = ['http://localhost:8080', 'https://www.youtube.com'];
 const corsOptions = {
 	origin: function (origin, callback) {
 		if (whiteList.indexOf(origin) !== -1 || !origin) { //!origin allows REST tools and server2server interaction
@@ -19,7 +19,8 @@ const corsOptions = {
 			callback(new Error('Not allowed by CORS'));
 		}
 	},
-	credentials: true
+	credentials: true,
+	maxAge: 600 //10 minutes
 };
 
 app.use(cors(corsOptions));
