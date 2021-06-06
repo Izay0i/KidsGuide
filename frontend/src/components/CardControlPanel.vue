@@ -59,7 +59,7 @@
 
 				<b-button 
 					variant="danger" 
-					v-if="editEnabled" 
+					v-if="quizzes.length > 0" 
 					v-on:click="confimQuizDeletion"
 				>
 					Xóa tất cả các câu hỏi
