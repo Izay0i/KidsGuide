@@ -54,7 +54,6 @@ create table Quizzes(
 	quiz_id serial not null,
 	post_id integer not null,
 	content jsonb not null,
-	post_time timestamp without time zone not null default now(),
 	constraint pk_quiz primary key(quiz_id),
 	constraint fk_post foreign key(post_id) references Posts(post_id)
 );

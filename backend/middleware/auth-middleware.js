@@ -32,7 +32,7 @@ function verifyEmail(request, response, next) {
 			if (error) throw error;
 
 			if (results.rowCount > 0) {
-				return response.status(400).send({
+				return response.status(403).send({
 					message: 'Email is already in use.'
 				});
 			}

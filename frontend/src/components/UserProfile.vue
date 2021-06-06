@@ -9,7 +9,7 @@
 					v-bind:key="tab.title"
 					v-bind:title="tab.title"
 				>
-					<component v-bind:is="tab.component"></component>					
+					<component v-bind:is="tab.component"></component>
 				</b-tab>
 
 				<b-tab title="Tùy chỉnh" v-if="isParamUserID">

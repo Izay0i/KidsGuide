@@ -79,7 +79,9 @@ const createPost = (request, response) => {
 		(error, results) => {
 			if (error) throw error;
 
-			response.status(201).send(`Blog added with ID: ${results.rows[0].post_id}`);
+			response.status(201).json({
+				post_id: results.rows[0].post_id
+			});
 		}
 	);
 
@@ -149,7 +151,9 @@ const updatePost = (request, response) => {
 				[title, content, thumbnail, vid_url, JSON.parse(tags), post_id]
 			);
 
-			response.status(200).send(`Post updated with ID: ${post_id}`);
+			response.status(200).json({
+				post_id
+			});
 		}
 		finally {
 			client.release();

@@ -6,6 +6,7 @@ const port = process.env.PORT || 3000;
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
+const quizRouter = require('./routes/quiz');
 const faqRouter = require('./routes/faq');
 const imageRouter = require('./routes/image');
 
@@ -37,6 +38,7 @@ app.get('/', (request, response) => {
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/posts', postRouter); //pending for review
+app.use('/quizzes', quizRouter);
 app.use('/faqs', faqRouter);
 app.use('/images', imageRouter);
 

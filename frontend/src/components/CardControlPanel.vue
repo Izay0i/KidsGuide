@@ -1,7 +1,7 @@
 <template>
 	<div class="post-group shadow-lg">
-		<div v-if="isParamUserID">
-			<b-form-group label="Bài viết:">
+		<b-form v-if="isParamUserID">
+			<b-form-group label="Hình ảnh:">
 				<div class="thumbnail">
 					<b-img 
 						v-bind="img_props" 
@@ -50,21 +50,21 @@
 				></b-form-tags>
 			</b-form-group>
 
-			<b-form-checkbox 
-				switch size="lg" 
-				class="mb-3" 
-				v-model="quizEnabled"
-			>
-				Tạo bài trắc nghiệm (tùy chọn)
-			</b-form-checkbox>
-
-			<b-form-group label="Trắc nghiệm:" v-show="quizEnabled">
-				<QuizInputSection 
-					class="mb-3" 
-					v-for="index in 5" 
-					v-bind:key="index"
-				/>
+			<b-form-group label="Trắc nghiệm (tùy chọn):">
+				<QuizInputSection v-on:add-question="addQuestion" />
 			</b-form-group>
+
+			<b-card>
+				<pre> "quizzes": {{ quizzes }} </pre>
+
+				<b-button 
+					variant="danger" 
+					v-if="editEnabled" 
+					v-on:click="confimQuizDeletion"
+				>
+					Xóa tất cả các câu hỏi
+				</b-button>
+			</b-card>
 
 			<b-button-group class="my-3">
 				<b-button 
@@ -80,7 +80,7 @@
 					<b-button variant="danger" v-on:click="clearInputs">Hủy</b-button>
 				</div>
 			</b-button-group>
-		</div>
+		</b-form>
 
 		<div class="search-post mb-4">
 			<b-button>
@@ -117,7 +117,18 @@
 				ok-title="Có" 
 				ok-variant="danger" 
 				cancel-title="Không" 
-				v-on:ok="deletePost"
+				v-on:ok="deleteQuiz"
+			></b-modal> <!--quiz is a child of post-->
+		</div>
+
+		<div>
+			<b-modal 
+				id="del-quiz-pop-up" 
+				title="Bạn có chắc chắn muốn xóa xóa tất cả các câu hỏi?" 
+				ok-title="Có" 
+				ok-variant="danger" 
+				cancel-title="Không" 
+				v-on:ok="clearQuizzes"
 			></b-modal>
 		</div>
 	</div>
@@ -132,6 +143,9 @@
 	import CardItem from '@/components/CardItem.vue';
 
 	import PostService from '@/services/PostService.js';
+	import QuizService from '@/services/QuizService.js';
+
+	//what have I done
 
 	export default {
 		name: 'CardControlPanel',
@@ -142,10 +156,9 @@
 		},
 		data: function() {
 			const tagsLimit = 5;
-
 			return {
 				tagsLimit,
-				img_props: { width: '500px' }, //bind to b-img
+				img_props: { width: '300px' }, //bind to b-img
 				search_post: '',
 				form_file: null,
 				vid_url_content: {
@@ -163,7 +176,7 @@
 				},
 				cards: [],
 				editEnabled: false,
-				quizEnabled: false
+				quizzes: []
 			};
 		},
 		mounted: function() {
@@ -204,7 +217,7 @@
 					console.log(error);
 				});
 			},
-			addPost: function() {
+			addPost: async function() {
 				if (!this.isPostImageValid || 
 					!this.isPostTitleValid || 
 					!this.isPostContentValid) 
@@ -225,7 +238,13 @@
 
 				PostService.createPost(formData)
 				.then(response => {
-					console.log(response);
+					const payload = {
+						post_id: response.post_id,
+						content: JSON.stringify(this.quizzes)
+					};
+
+					this.addQuiz(payload);
+
 					this.clearInputs();
 					this.getPostsByUserID();
 				})
@@ -255,6 +274,23 @@
 
 				PostService.updatePost(formData)
 				.then(response => {
+					const payload = {
+						post_id: response.post_id,
+						content: JSON.stringify(this.quizzes)
+					};
+
+					this.updateQuiz(payload);
+
+					this.clearInputs();
+					this.getPostsByUserID();
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			deletePost: async function() {
+				PostService.deletePost(this.card_content.post_id)
+				.then(response => {
 					console.log(response);
 					this.clearInputs();
 					this.getPostsByUserID();
@@ -263,12 +299,41 @@
 					console.log(error);
 				});
 			},
-			deletePost: function() {
-				PostService.deletePost(this.card_content.post_id)
+			addQuestion: function(obj) {
+				this.quizzes.push(JSON.parse(obj)); //obj is passed by ref so stringify and parse to pass by value
+			},
+			getQuizByPostID: async function() {
+				QuizService.getQuizByPostID(this.card_content.post_id)
+				.then(response => {
+					this.quizzes = response.content;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			addQuiz: async function(payload) {
+				QuizService.addQuiz(payload)
 				.then(response => {
 					console.log(response);
-					this.clearInputs();
-					this.getPostsByUserID();
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			updateQuiz: async function(payload) {
+				QuizService.updateQuiz(payload)
+				.then(response => {
+					console.log(response);
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			deleteQuiz: async function() {
+				QuizService.deleteQuiz(this.card_content.post_id)
+				.then(response => {
+					console.log(response);
+					this.deletePost();
 				})
 				.catch(error => {
 					console.log(error);
@@ -293,10 +358,14 @@
 				this.editEnabled = true;
 				this.card_content.post_id = id;
 				this.getPostByID();
+				this.getQuizByPostID();
 			},
 			confirmDeletion: function(id) {
 				this.card_content.post_id = id;
 				this.$bvModal.show('del-pop-up');
+			},
+			confimQuizDeletion: function() {
+				this.$bvModal.show('del-quiz-pop-up');
 			},
 			clearInputs: function() {
 				this.editEnabled = false;
@@ -305,9 +374,14 @@
 				this.card_content.title = '';
 				this.card_content.content = '';
 				this.card_content.tags = [];
+				
+				this.clearQuizzes();
 
 				URL.revokeObjectURL(this.form_file);
 				this.form_file = null;
+			},
+			clearQuizzes: function() {
+				this.quizzes = [];
 			}
 		},
 		computed: {
@@ -331,7 +405,7 @@
 </script>
 
 <style scoped>
-	input, input:focus, 
+	/* input, input:focus, 
 	select, select:focus, 
 	textarea, textarea:focus, 
 	.tags, .tags:focus-within
@@ -343,7 +417,7 @@
 		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
 		box-shadow: none;
 		margin-bottom: 5px;
-	}
+	} */
 
 	.post-group {
 		border-radius: 20px;

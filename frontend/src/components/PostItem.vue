@@ -20,6 +20,8 @@
 			<p>Ngày đăng: {{ post.post_time }}</p>
 			<p>{{ post.content }}</p>
 
+			<QuizDisplay v-bind:prop_quizzes="quizzes" />
+
 			<b-badge 
 				class="tags"
 				v-for="tag in post.tags" 
@@ -32,10 +34,16 @@
 <script>
 	import moment from 'moment';
 
+	import QuizDisplay from '@/components/QuizDisplay.vue';
+
 	import PostService from '@/services/PostService.js';
+	import QuizService from '@/services/QuizService.js';
 
 	export default {
 		name: 'PostItem',
+		components: {
+			QuizDisplay
+		},
 		data: function() {
 			return {
 				post: {
@@ -45,11 +53,13 @@
 					vid_url: '',
 					post_time: '',
 					tags: []
-				}
+				},
+				quizzes: []
 			};
 		},
 		created: function() {
 			this.getPostByID();
+			this.getQuizByPostID();
 		},
 		methods: {
 			getPostByID: async function() {
@@ -61,6 +71,15 @@
 				.catch(error => {
 					console.log(error);
 				})
+			},
+			getQuizByPostID: async function() {
+				QuizService.getQuizByPostID(this.$route.params.id)
+				.then(response => {
+					this.quizzes = response.content;
+				})
+				.catch(error => {
+					console.log(error);
+				});
 			}
 		}
 	}

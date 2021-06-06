@@ -1,5 +1,9 @@
 <template>
     <div class="auth-form">
+		<b-alert show fade dismissible variant="danger">
+			Website này là phiên bản thử nghiệm, vui lòng không cung cấp thông tin cá nhân.
+		</b-alert>
+
         <div class="body">
 			<img src="@/assets/auth_banner.png" class="banner"/>
 				
@@ -38,6 +42,7 @@
 <style scoped>
 	.auth-form {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		width: 100%;
 		height: auto;
