@@ -26,7 +26,7 @@
 						v-bind:disabled="isEndOfQuiz" 
 						v-on:click="nextQuestion" 
 					>
-						Skip
+						Bỏ qua
 					</b-button>
 					
 					<b-button 
@@ -35,7 +35,7 @@
 						v-if="!isEndOfQuiz" 
 						v-on:click="nextQuestion"
 					>
-						Next
+						Tiếp theo
 					</b-button>
 				</div>
 			</div>
