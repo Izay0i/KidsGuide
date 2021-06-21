@@ -21,14 +21,20 @@
 				<b-button variant="info" v-on:click="addReponse">Thêm đáp án</b-button>
 			</div>
 
-			<b-card v-bind:state="areAllAnswersFalse">
-				<pre> "question": {{  question }} </pre>
-				<pre> "responses": {{ responses }} </pre>
-			</b-card>
+			<div class="responses" v-for="res in responses" v-bind:key="res.response">
+				<b-alert 
+					show 
+					dismissible 
+					v-bind:variant="res.correct ? 'success' : 'danger'" 
+					v-on:dismissed="deleteResponse(res.response, res.correct)"
+				> 
+					Đáp án: {{ res.response }} 
+				</b-alert>
+			</div>
 
 			<div class="extra-btns">
-				<b-button variant="info" v-on:click="addQuestion">Thêm câu hỏi</b-button>
-				<b-button variant="danger" v-on:click="deleteQuestion">Xóa câu hỏi</b-button>
+				<b-button variant="success" v-on:click="addQuestion">Thêm câu hỏi</b-button>
+				<!-- <b-button variant="danger" v-on:click="deleteQuestion">Xóa câu hỏi</b-button> -->
 			</div>
 		</b-form>
 	</div>
@@ -61,6 +67,10 @@
 
 				this.clearQuestionInput();
 			},
+			deleteQuestion: function() {
+				this.clearQuestionInput();
+				this.clearResponseInputs();
+			},
 			addReponse: function() {
 				if (!this.isResponseValid) {
 					return;
@@ -73,9 +83,12 @@
 
 				this.clearResponseInputs();
 			},
-			deleteQuestion: function() {
-				this.clearQuestionInput();
-				this.clearResponseInputs();
+			deleteResponse: function(response, correct) {
+				let index = this.responses.findIndex(function(element) {
+					return element.response === response && element.correct === correct;
+				});
+
+				this.responses.splice(index, 1);
 			},
 			clearQuestionInput: function() {
 				this.responses.length = 0;

@@ -7,6 +7,7 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
 const quizRouter = require('./routes/quiz');
+const reportRouter = require('./routes/report');
 const faqRouter = require('./routes/faq');
 const imageRouter = require('./routes/image');
 
@@ -37,8 +38,9 @@ app.get('/', (request, response) => {
 
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
-app.use('/posts', postRouter); //pending for review
+app.use('/posts', postRouter);
 app.use('/quizzes', quizRouter);
+app.use('/reports', reportRouter);
 app.use('/faqs', faqRouter);
 app.use('/images', imageRouter);
 

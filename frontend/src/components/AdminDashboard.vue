@@ -19,6 +19,7 @@
 </template>
 
 <script>
+	import ReportControlPanel from '@/components/ReportControlPanel.vue';
 	import FaqControlPanel from '@/components/FaqControlPanel.vue';
 
 	export default {
@@ -29,8 +30,8 @@
 		data: function() {
 			return {
 				tabs: [
-					{ component: FaqControlPanel, title: 'FAQ' },
-					{ component: '', title: 'Báo cáo' }
+					{ component: ReportControlPanel, title: 'Báo cáo' },
+					{ component: FaqControlPanel, title: 'FAQ' }
 				]
 			};
 		}

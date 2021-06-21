@@ -16,6 +16,13 @@
 				v-for="post in posts" 
 				v-bind:key="post.post_id + post.post_time"
 			>
+				<b-dropdown variant="dark" size="sm">
+					<b-dropdown-item><b-icon variant="warning" icon="bookmark"></b-icon> &nbsp; Lưu bài viết</b-dropdown-item>
+					<b-dropdown-item v-on:click="confimReport(post.post_id)">
+						<b-icon variant="danger" icon="exclamation-triangle-fill"></b-icon> &nbsp; Báo cáo bài viết
+					</b-dropdown-item>
+				</b-dropdown>
+
 				<b-card-text class="title">
 					{{ post.title }}
 				</b-card-text>
@@ -38,9 +45,27 @@
 					class="tags"
 					v-for="tag in post.tags" 
 					v-bind:key="tag"
-				>{{ tag }}</b-badge>
+				>
+					{{ tag }}
+				</b-badge>
 			</b-card>
 		</b-card-group>
+
+		<b-modal 
+			id="report" 
+			title="Báo cáo bài viết" 
+			ok-title="Gửi" 
+			ok-variant="danger" 
+			cancel-title="Hủy" 
+			v-on:ok="handleOk" 
+			v-on:hidden="resetReportForm"
+		>
+			<b-form v-on:submit.stop.prevent="addReport">
+				<b-form-group label="Lý do:">
+					<b-form-input required v-model="reason"></b-form-input>
+				</b-form-group>
+			</b-form>
+		</b-modal>
 	</div>
 </template>
 
@@ -48,6 +73,7 @@
 	import moment from 'moment';
 
 	import PostService from '@/services/PostService.js';
+	import ReportService from '@/services/ReportService.js';
 
 	export default {
 		name: 'PostCollection',
@@ -55,15 +81,17 @@
 			return {
 				timer: '',
 				search_post: '',
-				posts: []
+				posts: [],
+				post_id: -1,
+				reason: ''
 			};
 		},
 		created: function() {
 			this.getPosts();
-			this.timer = setInterval(this.getPosts, 10000);
+			//this.timer = setInterval(this.getPosts, 10000);
 		},
 		beforeDestroy: function() {
-			this.cancelAutoUpdate();
+			//this.cancelAutoUpdate();
 		},
 		methods: {
 			getPosts: async function() {
@@ -90,6 +118,42 @@
 					console.log(error);
 				});
 			},
+			addReport: async function() {
+				if (!this.isReasonValid) {
+					return;
+				}
+
+				const user = JSON.parse(localStorage.getItem('user'));
+				let payload = {
+					uid: user.uid,
+					post_id: this.post_id,
+					reason: this.reason
+				};
+
+				ReportService.createReport(payload)
+				.then(response => {
+					console.log(response);
+
+					this.$bvModal.hide('report');
+				})
+				.catch(error => {
+					console.log(error);
+				})
+			},
+			confimReport: function(id) {
+				this.$bvModal.show('report');
+
+				this.post_id = id;
+			},
+			handleOk: function(event) {
+				event.preventDefault();
+
+				this.addReport();
+			},
+			resetReportForm: function() {
+				this.post_id = -1;
+				this.reason = '';
+			},
 			cancelAutoUpdate: function() {
 				clearInterval(this.timer);
 			},
@@ -102,6 +166,9 @@
 		computed: {
 			isSearchItemPostValid: function() {
 				return this.search_post.length ? true : false;
+			},
+			isReasonValid: function() {
+				return this.reason.length;
 			}
 		}
 	}

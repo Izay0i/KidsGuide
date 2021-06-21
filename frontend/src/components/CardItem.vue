@@ -1,6 +1,23 @@
 <template>
 	<div>
 		<b-card class="cards mx-auto shadow-lg">
+			<b-dropdown variant="dark" size="sm">
+				<template v-if="!isParamUserID">
+					<b-dropdown-item><b-icon variant="warning" icon="bookmark"></b-icon> &nbsp; Lưu bài viết</b-dropdown-item>
+					<b-dropdown-item v-on:click="confimReport">
+						<b-icon variant="danger" icon="exclamation-triangle"></b-icon> &nbsp; Báo cáo bài viết
+					</b-dropdown-item>
+				</template>
+				<template v-else>
+					<b-dropdown-item v-on:click="updatePost">
+						<b-icon variant="info" icon="pencil"></b-icon> &nbsp; Sửa
+					</b-dropdown-item>
+					<b-dropdown-item v-on:click="deletePost">
+						<b-icon variant="danger" icon="x-circle"></b-icon> &nbsp; Xóa
+					</b-dropdown-item>
+				</template>
+			</b-dropdown>
+
 			<b-card-text class="title">
 				{{ card_content.title }}
 			</b-card-text>
@@ -27,29 +44,33 @@
 				class="tags"
 				v-for="tag in card_content.tags" 
 				v-bind:key="tag"
-			>{{ tag }}</b-badge>
-
-			<div class="footer mt-5" v-if="isParamUserID">
-				<b-button 
-					class="mr-3 bg-warning border-0 rounded" 
-					v-on:click="updatePost"
-				>
-					Sửa
-				</b-button>
-
-				<b-button 
-					class="mr-3 bg-danger border-0 rounded" 
-					v-on:click="deletePost"
-				>
-					Xóa
-				</b-button>
-			</div>
+			>
+				{{ tag }}
+			</b-badge>
 		</b-card>
+
+		<b-modal 
+			id="report" 
+			title="Báo cáo bài viết" 
+			ok-title="Gửi" 
+			ok-variant="danger" 
+			cancel-title="Hủy" 
+			v-on:ok="handleOk" 
+			v-on:hidden="resetReportForm"
+		>
+			<b-form v-on:submit.stop.prevent="addReport">
+				<b-form-group label="Lý do:">
+					<b-form-input required v-model="reason"></b-form-input>
+				</b-form-group>
+			</b-form>
+		</b-modal>
 	</div>
 </template>
 
 <script>
 	import { mapGetters } from 'vuex';
+
+	import ReportService from '@/services/ReportService.js';
 
 	export default {
 		name: 'CardItem',
@@ -91,7 +112,8 @@
 					content: this.prop_content,
 					date: this.prop_date,
 					tags: this.prop_tags
-				}
+				},
+				reason: ''
 			};
 		},
 		methods: {
@@ -106,12 +128,48 @@
 			deletePost: function() {
 				//calling delete-card event from AdminDashboard.vue with a value of this.id
 				this.$emit('delete-card', this.id);
+			},
+			addReport: async function() {
+				if (!this.isReasonValid) {
+					return;
+				}
+
+				const user = JSON.parse(localStorage.getItem('user'));
+				let payload = {
+					uid: user.uid,
+					post_id: this.id,
+					reason: this.reason
+				};
+
+				ReportService.createReport(payload)
+				.then(response => {
+					console.log(response);
+
+					this.$bvModal.hide('report');
+				})
+				.catch(error => {
+					console.log(error);
+				})
+			},
+			confimReport: function() {
+				this.$bvModal.show('report');
+			},
+			handleOk: function(event) {
+				event.preventDefault();
+
+				this.addReport();
+			},
+			resetReportForm: function() {
+				this.reason = '';
 			}
 		},
 		computed: {
 			...mapGetters({
 				isParamUserID: 'isParamUserID'
-			})
+			}),
+			isReasonValid: function() {
+				return this.reason.length;
+			}
 		}
 	};
 </script>

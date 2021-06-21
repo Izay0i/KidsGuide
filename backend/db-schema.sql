@@ -1,3 +1,4 @@
+-- ['user', 'superuser']
 create table Users(
 	uid serial not null,
 	email text not null,
@@ -46,7 +47,6 @@ create table Favorites(
 	post_id integer not null,
 	uid integer not null,
 	constraint pk_fav primary key(fav_id),
-	constraint fk_post foreign key(post_id) references Posts(post_id),
 	constraint fk_uid foreign key(uid) references Users(uid)
 );
 
@@ -64,7 +64,5 @@ create table Reports(
 	post_id integer not null,
 	reason text not null,
 	report_time timestamp without time zone not null default now(),
-	constraint pk_report primary key(report_id),
-	constraint fk_uid foreign key(uid) references Users(uid),
-	constraint fk_post foreign key(post_id) references Posts(post_id)
+	constraint pk_report primary key(report_id)
 );

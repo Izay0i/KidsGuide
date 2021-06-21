@@ -16,7 +16,7 @@
 					></b-form-file>
 				</div>
 
-				<div class="my-5">
+				<div class="my-2">
 					<b-form-input 
 						placeholder="Đường dẫn video (Nếu có)" 
 						v-model="card_content.vid_url"
@@ -36,7 +36,7 @@
 					
 				<b-form-textarea 
 					placeholder="Nội dung" 
-					rows="16" 
+					rows="4" 
 					v-model="card_content.content" 
 					v-bind:state="isPostContentValid"
 				></b-form-textarea>
@@ -50,21 +50,32 @@
 				></b-form-tags>
 			</b-form-group>
 
-			<b-form-group label="Trắc nghiệm (tùy chọn):">
-				<QuizInputSection v-on:add-question="addQuestion" />
-			</b-form-group>
+			<b-button v-b-toggle="'quiz'" class="mr-5">Trắc nghiệm (tùy chọn) ▼</b-button>
+			<b-collapse id="quiz">
+				<b-form-group>
+					<QuizInputSection v-on:add-question="addQuestion" />
+				</b-form-group>
 
-			<b-card>
-				<pre> "quizzes": {{ quizzes }} </pre>
+				<b-card v-if="quizzes.length > 0">
+					<b-alert 
+						show 
+						dismissible 
+						v-for="quizz in quizzes" 
+						v-bind:key="quizz.question" 
+						v-on:dismissed="deleteQuestion"
+					> 
+						{{ quizz.question }} 
+					</b-alert>
 
-				<b-button 
-					variant="danger" 
-					v-if="quizzes.length > 0" 
-					v-on:click="confimQuizDeletion"
-				>
-					Xóa tất cả các câu hỏi
-				</b-button>
-			</b-card>
+					<b-button 
+						variant="danger" 
+						v-if="quizzes.length > 0" 
+						v-on:click="confimQuizDeletion"
+					>
+						Xóa tất cả các câu hỏi
+					</b-button>
+				</b-card>
+			</b-collapse>
 
 			<b-button-group class="my-3">
 				<b-button 
@@ -247,6 +258,8 @@
 
 					this.clearInputs();
 					this.getPostsByUserID();
+
+					this.createToast('Thêm thành công');
 				})
 				.catch(error => {
 					console.log(error);
@@ -302,6 +315,13 @@
 			addQuestion: function(obj) {
 				this.quizzes.push(JSON.parse(obj)); //obj is passed by ref so stringify and parse to pass by value
 			},
+			deleteQuestion: function(question) {
+				let index = this.quizzes.findIndex(function(element) {
+					return element.question === question;
+				});
+
+				this.quizzes.splice(index, 1);
+			},
 			getQuizByPostID: async function() {
 				QuizService.getQuizByPostID(this.card_content.post_id)
 				.then(response => {
@@ -334,9 +354,18 @@
 				.then(response => {
 					console.log(response);
 					this.deletePost();
+
+					this.createToast('Xóa thành công');
 				})
 				.catch(error => {
 					console.log(error);
+				});
+			},
+			createToast: function(text, title = 'Thông báo') {
+				this.$bvToast.toast(text, {
+					title: title,
+					autoHideDelay: 3000,
+					append: true
 				});
 			},
 			formatPostTime: function(arr) {
