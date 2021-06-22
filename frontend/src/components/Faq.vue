@@ -1,7 +1,5 @@
 <template>
     <div>
-		<Banner />
-
         <b-jumbotron header="Các câu hỏi thường gặp" class="w-75 m-auto">
             <b-img thumbnail fluid src="@/assets/book.png" alt="Logo"></b-img>
             
@@ -19,13 +17,8 @@
 <script>
 	import FaqService from '@/services/FaqService.js';
 
-	import Banner from '@/components/Banner.vue';
-
     export default {
         name: 'Faq',
-		components: {
-			Banner
-		},
         data: function() {
             return {
                 faqs: []

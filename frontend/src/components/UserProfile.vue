@@ -1,7 +1,5 @@
 <template>
 	<div>
-		<Banner />
-
 		<b-card no-body class="cards">
 			<b-tabs card>
 				<b-tab
@@ -23,7 +21,6 @@
 <script>
 	import { mapGetters } from 'vuex';
 
-	import Banner from '@/components/Banner.vue';
 	import UserInfo from '@/components/UserInfo.vue';
 	import CardControlPanel from '@/components/CardControlPanel.vue';
 	import UserSettings from '@/components/UserSettings.vue';
@@ -31,14 +28,13 @@
 	export default {
 		namer: 'UserProfile',
 		components: {
-			Banner,
 			UserSettings
 		},
 		data: function() {
 			return {
 				tabs: [
-					{ component: UserInfo, title: 'Thông tin' },
-					{ component: CardControlPanel, title: 'Bài viết' }
+					{ component: CardControlPanel, title: 'Bài viết' },
+					{ component: UserInfo, title: 'Thông tin' }
 				],
 				userID: -1
 			};

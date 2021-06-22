@@ -27,12 +27,7 @@ const createReport = (request, response) => {
 	);
 };
 
-const deleteReport = (request, response) => {
-
-}
-
 module.exports = {
 	getReports,
-	createReport,
-	deleteReport
+	createReport
 };

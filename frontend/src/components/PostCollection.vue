@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="body">
 		<div class="search-post mb-4">
 			<b-button>
 				<b-icon icon="search" v-on:click="getPostByTitle"></b-icon>
@@ -12,83 +12,41 @@
 		</div>
 
 		<b-card-group columns class="cards">
-			<b-card 
+			<CardItem 
 				v-for="post in posts" 
-				v-bind:key="post.post_id + post.post_time"
-			>
-				<b-dropdown variant="dark" size="sm">
-					<b-dropdown-item><b-icon variant="warning" icon="bookmark"></b-icon> &nbsp; Lưu bài viết</b-dropdown-item>
-					<b-dropdown-item v-on:click="confimReport(post.post_id)">
-						<b-icon variant="danger" icon="exclamation-triangle-fill"></b-icon> &nbsp; Báo cáo bài viết
-					</b-dropdown-item>
-				</b-dropdown>
-
-				<b-card-text class="title">
-					{{ post.title }}
-				</b-card-text>
-
-				<router-link class="link" v-bind:to="{ name: 'Post', params: { id: post.post_id } }">
-					<b-icon 
-						icon="play-btn-fill" 
-						class="icon" 
-						v-if="post.vid_url"
-					></b-icon>
-					
-					<b-img v-bind:src="post.thumbnail" fluid-grow></b-img>
-				</router-link>
-				
-				<b-card-text class="date">
-					Ngày đăng: {{ post.post_time }}
-				</b-card-text>
-
-				<b-badge 
-					class="tags"
-					v-for="tag in post.tags" 
-					v-bind:key="tag"
-				>
-					{{ tag }}
-				</b-badge>
-			</b-card>
+				v-bind:key="post.post_id + post.post_time" 
+				v-bind:prop_obj="post"
+			/>
 		</b-card-group>
-
-		<b-modal 
-			id="report" 
-			title="Báo cáo bài viết" 
-			ok-title="Gửi" 
-			ok-variant="danger" 
-			cancel-title="Hủy" 
-			v-on:ok="handleOk" 
-			v-on:hidden="resetReportForm"
-		>
-			<b-form v-on:submit.stop.prevent="addReport">
-				<b-form-group label="Lý do:">
-					<b-form-input required v-model="reason"></b-form-input>
-				</b-form-group>
-			</b-form>
-		</b-modal>
 	</div>
 </template>
 
 <script>
 	import moment from 'moment';
 
+	import CardItem from '@/components/CardItem.vue';
+
 	import PostService from '@/services/PostService.js';
-	import ReportService from '@/services/ReportService.js';
 
 	export default {
 		name: 'PostCollection',
+		components: {
+			CardItem
+		},
 		data: function() {
 			return {
 				timer: '',
 				search_post: '',
-				posts: [],
-				post_id: -1,
-				reason: ''
+				posts: []
 			};
 		},
 		created: function() {
 			this.getPosts();
 			//this.timer = setInterval(this.getPosts, 10000);
+			this.$store.dispatch('setParamUserID', {
+				uid: this.userID,
+				paramID: -1
+			});
 		},
 		beforeDestroy: function() {
 			//this.cancelAutoUpdate();
@@ -117,42 +75,6 @@
 				.catch(error => {
 					console.log(error);
 				});
-			},
-			addReport: async function() {
-				if (!this.isReasonValid) {
-					return;
-				}
-
-				const user = JSON.parse(localStorage.getItem('user'));
-				let payload = {
-					uid: user.uid,
-					post_id: this.post_id,
-					reason: this.reason
-				};
-
-				ReportService.createReport(payload)
-				.then(response => {
-					console.log(response);
-
-					this.$bvModal.hide('report');
-				})
-				.catch(error => {
-					console.log(error);
-				})
-			},
-			confimReport: function(id) {
-				this.$bvModal.show('report');
-
-				this.post_id = id;
-			},
-			handleOk: function(event) {
-				event.preventDefault();
-
-				this.addReport();
-			},
-			resetReportForm: function() {
-				this.post_id = -1;
-				this.reason = '';
 			},
 			cancelAutoUpdate: function() {
 				clearInterval(this.timer);
@@ -186,6 +108,14 @@
 	img {
 		border-radius: 10px;
 		margin-bottom: 10px;
+	}
+
+	.body {
+		padding: 50px;
+		background-image: url('../assets/blackboard.jpg');
+		background-repeat: no-repeat;
+		background-attachment: local;
+		background-size: 100% 100%;
 	}
 
 	.cards > * {
@@ -224,5 +154,12 @@
 
 	.tags {
 		margin-right: 5px;
+	}
+
+	@media screen and (max-width: 540px) {
+		.body {
+			padding-top: 80px;
+			padding-bottom: 80px;
+		}
 	}
 </style>

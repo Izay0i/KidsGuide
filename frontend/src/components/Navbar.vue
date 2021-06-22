@@ -1,23 +1,40 @@
 <template>
 	<div>
 		<b-navbar class="header">
-			<b-nav pills class="nav-items">
-				<b-nav-item 
-					class="home" 
-					v-bind:to="{ name: 'Home' }"
-				>
-					Trang chủ
-				</b-nav-item>
-				
+			<b-nav vertical class="nav-items">
 				<b-nav-item v-bind:to="{ name: 'PostCollection' }">
-					Các kỹ năng khác
+					&nbsp; Các kỹ năng
+
+					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 152.9 43.4" style="enable-background:new 0 0 152.9 43.4;" xml:space="preserve">
+						<path d="M151.9,13.6c0,0,3.3-9.5-85-8.3c-97,1.3-58.3,29-58.3,29s9.7,8.1,69.7,8.1c68.3,0,69.3-23.1,69.3-23.1 s1.7-10.5-14.7-18.4"/>
+					</svg>
 				</b-nav-item>
 				
+				<b-nav-item v-bind:to="{ name: 'Faq' }">
+					&nbsp; FAQ
+
+					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 152.9 43.4" style="enable-background:new 0 0 152.9 43.4;" xml:space="preserve">
+						<path d="M151.9,13.6c0,0,3.3-9.5-85-8.3c-97,1.3-58.3,29-58.3,29s9.7,8.1,69.7,8.1c68.3,0,69.3-23.1,69.3-23.1 s1.7-10.5-14.7-18.4"/>
+					</svg>
+				</b-nav-item>
+
+				<b-nav-item v-bind:to="{ name: 'Terms' }">
+					&nbsp; Điều khoản
+
+					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 152.9 43.4" style="enable-background:new 0 0 152.9 43.4;" xml:space="preserve">
+						<path d="M151.9,13.6c0,0,3.3-9.5-85-8.3c-97,1.3-58.3,29-58.3,29s9.7,8.1,69.7,8.1c68.3,0,69.3-23.1,69.3-23.1 s1.7-10.5-14.7-18.4"/>
+					</svg>
+				</b-nav-item>
+
 				<b-nav-item 
 					v-bind:to="{ name: 'AdminDashboard' }" 
 					v-if="isAdmin"
 				>
-					Admin
+					&nbsp; Admin
+
+					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 152.9 43.4" style="enable-background:new 0 0 152.9 43.4;" xml:space="preserve">
+						<path d="M151.9,13.6c0,0,3.3-9.5-85-8.3c-97,1.3-58.3,29-58.3,29s9.7,8.1,69.7,8.1c68.3,0,69.3-23.1,69.3-23.1 s1.7-10.5-14.7-18.4"/>
+					</svg>
 				</b-nav-item>
 				
 				<b-nav-item 
@@ -25,7 +42,11 @@
 					v-bind:to="{ name: 'AuthForm' }" 
 					v-if="!authenticated"
 				>
-					Đăng nhập
+					&nbsp; Đăng nhập
+
+					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 152.9 43.4" style="enable-background:new 0 0 152.9 43.4;" xml:space="preserve">
+						<path d="M151.9,13.6c0,0,3.3-9.5-85-8.3c-97,1.3-58.3,29-58.3,29s9.7,8.1,69.7,8.1c68.3,0,69.3-23.1,69.3-23.1 s1.7-10.5-14.7-18.4"/>
+					</svg>
 				</b-nav-item>
 				
 				<b-avatar 
@@ -71,53 +92,44 @@
 </script>
 
 <style scoped>
-	.header {		
-		background-color: #049dd9;
+	.nav-items {
+		padding: 8px;
 	}
 
-	.nav-items {
-		width: 100%;
-		padding: 10px;
+	.nav-items * {
+		margin-bottom: 3px;
 	}
 
 	.nav-items a {
 		color: white;
 	}
 
-	.nav-items a:hover {
-		color: #04d9b2;
+	/* https://codemyui.com/hand-drawn-pencil-circle-hover/ */
+	.nav-items svg {
+		fill: none;
+		stroke: whitesmoke;
+		stroke-width: 3;
+		stroke-miterlimit: 10;
+		stroke-dasharray: 338;
+		stroke-dashoffset: 338;
+		stroke-linecap: round;
+		position: absolute;
+		width: calc(100% + 60px);
+		opacity: 0;
+		transform: translate(-60%, -40%);
+		transition: stroke-dashoffset 0s 0.2s, opacity 0.2s;
+		z-index: -1;
 	}
 
-	.home {
-		border-radius: 20px;
-		background-color: #f272d0;
+	.nav-items a:hover svg {
+		stroke-dashoffset: 0;
+		opacity: 1;
+		transition: opacity 0s, stroke-dashoffset 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 	}
-
-	.home a:hover {
-		color: #f2bc57;
-	}
-
-	.auth-btn {
-		margin-left: auto;
-		border-radius: 20px;
-		background-color: #4abfd9;
-	}
-
-	.auth-btn a:hover {
-		color: #f2bc57;
-	}
-
+	
 	.profile-btn {
+		margin-top: 12px;
 		margin-left: auto;
-	}
-
-	@media screen and (max-width: 414px) { /*iPhone 6/7/8 Plus*/
-		.nav-items {
-			flex-direction: column;
-		}
-
-		.profile-btn {
-			margin-right: auto;
-		}
+		margin-right: auto;
 	}
 </style>

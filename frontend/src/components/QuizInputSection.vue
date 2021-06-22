@@ -1,5 +1,5 @@
 <template>
-	<div class="quiz-group shadow">
+	<div class="quiz-group shadow-lg">
 		<b-form>
 			<b-form-input 
 				placeholder="Câu hỏi" 
@@ -121,7 +121,7 @@
 </script>
 
 <style scoped>
-	/* input, input:focus, 
+	input, input:focus, 
 	select, select:focus, 
 	textarea, textarea:focus, 
 	.tags, .tags:focus-within
@@ -130,16 +130,16 @@
 		color: #36454f;
 		border: 0;
 		border-radius: 0;
-		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+		border: 2px dashed rgba(0, 0, 0, 0.5);
 		box-shadow: none;
 		margin-bottom: 5px;
-	} */
+	}
 
 	.quiz-group {
 		border-radius: 10px;
 		padding: 15px;
 		margin: auto;
-		background-color: #ddb892;
+		background-color: #e0c9a6;
 	}
 	
 	.quiz-group * {

@@ -9,15 +9,16 @@
 					v-bind:key="index"
 				>
 					<p> {{ quizz.question }} </p>
-					<b-button 
-						class="response-btn" 
-						variant="info" 
-						v-for="(response, index) in quizz.responses" 
-						v-bind:key="index" 
-						v-on:click="checkResponse(response)"
-					>
-						{{ response.response }}
-					</b-button>
+					<div class="response-btns">
+						<b-button 
+							variant="info" 
+							v-for="(response, index) in quizz.responses" 
+							v-bind:key="index" 
+							v-on:click="checkResponse(response)"
+						>
+							{{ response.response }}
+						</b-button>
+					</div>
 				</b-form-group>
 
 				<div class="btns">
@@ -102,10 +103,15 @@
 		border-radius: 10px;
 	}
 
-	.response-btn {
+	.response-btns {
 		display: flex;
-		align-items: center;
+		flex-wrap: wrap;
 		margin-bottom: 10px;
+	}
+
+	.response-btns * {
+		margin: 5px;
+		flex: 1 0 calc(50% - 10px);
 	}
 
 	.btns {

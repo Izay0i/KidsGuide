@@ -10,6 +10,7 @@ const quizRouter = require('./routes/quiz');
 const reportRouter = require('./routes/report');
 const faqRouter = require('./routes/faq');
 const imageRouter = require('./routes/image');
+const favRouter = require('./routes/favorite');
 
 const whiteList = ['http://localhost:8080', 'https://www.youtube.com'];
 const corsOptions = {
@@ -43,6 +44,7 @@ app.use('/quizzes', quizRouter);
 app.use('/reports', reportRouter);
 app.use('/faqs', faqRouter);
 app.use('/images', imageRouter);
+app.use('/favorites', favRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}.`);

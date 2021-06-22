@@ -6,7 +6,7 @@
 			v-bind:key="report.report_id"
 		>
 			<b-card-header>
-				Báo cáo ngày: {{ report.report_time }}
+				Báo cáo lúc: {{ report.report_time }}
 			</b-card-header>
 			<b-card-body>
 				<b-card-text>
@@ -60,7 +60,7 @@
 			},
 			formatPostTime: function(arr) {
 				arr.forEach(
-					(item) => item.report_time = moment(item.report_time).format('DD/MM/YYYY hh:mm A')
+					(item) => item.report_time = moment(item.report_time).format('DD/MM/YYYY hh:mm:ss A')
 				);
 			}
 		}
@@ -68,5 +68,5 @@
 </script>
 
 <style scoped>
-
+	
 </style>

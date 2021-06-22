@@ -1,7 +1,5 @@
 <template>
     <div>
-        <h2><span>Các kỹ năng</span></h2>
-
         <b-carousel
             class="carousel" 
             controls 
@@ -26,7 +24,7 @@
 						></b-icon>
 
 						<img 
-							class="d-block img-fluid w-100"
+							class="thumbnail img-fluid"
 							v-bind:src="post.thumbnail"
 						/>
 					</router-link>
@@ -65,27 +63,15 @@
 </script>
 
 <style scoped>
-    h2 {
-        width: 100%; 
-        text-align: center;
-        border-bottom: 1px solid white; 
-        line-height: 0.1em;
-        margin: 10px 0px 40px;
-    } 
-
-    h2 span { 
-        background:#6a92f2;
-        color: white;
-        padding: 0px 10px; 
-    }
-
 	img {
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
 	}
 
 	.carousel {
-		padding: 5%;
+		width: 50%;
+		padding-left: 5%;
+		padding-right: 5%;
 		text-shadow: 1px 1px 2px #333;
 	}
 
@@ -93,31 +79,38 @@
 		position: relative;
 	}
 
-	.link .icon {
+	.icon {
 		z-index: 10000;
 		position: absolute;
 		transform: scale(1.5) translate(50%, 50%);
 	}
 
-	.link > * {
+	.thumbnail {
+		display: block;
+		object-fit: contain;
+		background-color: black;
+		width: 100vw;
+		height: 50vh;
+	}
+
+	.link * {
 		text-decoration: none;
 		color: white;
 	}
 
 	.caption {
-		margin: 0;
+		margin: 0 auto;
 		text-align: center;
 		text-shadow: none;
 		font-size: 1.5rem;
-		background-color: #cfb997;
-		color: #9c6644;
-		border-top-left-radius: 10px;
-		border-top-right-radius: 10px;
+		background-color: rgba(255, 255, 255, 0.7);
+		color: #36454f;
+		border-radius: 6px 6px 0 0;
 	}
 
 	@media screen and (max-width: 1024px) {
 		.carousel {
-			margin: 0;
+			width: 100%;
 			padding: 0;
 		}
 	}

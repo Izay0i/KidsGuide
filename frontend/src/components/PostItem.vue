@@ -1,6 +1,20 @@
 <template>
 	<div>
 		<div class="body shadow-lg">
+			<b-dropdown 
+				variant="light"
+				size="sm" 
+				right 
+				class="dropdown"
+			>
+				<b-dropdown-item v-on:click="addFavorite">
+					<b-icon variant="warning" icon="bookmark"></b-icon> &nbsp; Lưu bài viết
+				</b-dropdown-item>
+				<b-dropdown-item v-on:click="confimReport">
+					<b-icon variant="danger" icon="exclamation-triangle"></b-icon> &nbsp; Báo cáo bài viết
+				</b-dropdown-item>
+			</b-dropdown>
+
 			<h1>{{ post.title }}</h1>
 
 			<b-img-lazy 
@@ -26,8 +40,26 @@
 				class="tags"
 				v-for="tag in post.tags" 
 				v-bind:key="tag"
-			>{{ tag }}</b-badge>
+			>
+				{{ tag }}
+			</b-badge>
 		</div>
+
+		<b-modal 
+			id="report-pop-up" 
+			title="Báo cáo bài viết" 
+			ok-title="Gửi" 
+			ok-variant="danger" 
+			cancel-title="Hủy" 
+			v-on:ok="handleOk" 
+			v-on:hidden="resetReportForm"
+		>
+			<b-form v-on:submit.stop.prevent="addReport">
+				<b-form-group label="Lý do:">
+					<b-form-input required v-model="reason"></b-form-input>
+				</b-form-group>
+			</b-form>
+		</b-modal>
 	</div>
 </template>
 
@@ -38,6 +70,8 @@
 
 	import PostService from '@/services/PostService.js';
 	import QuizService from '@/services/QuizService.js';
+	import ReportService from '@/services/ReportService.js';
+	import FavService from '@/services/FavService.js';
 
 	export default {
 		name: 'PostItem',
@@ -54,7 +88,8 @@
 					post_time: '',
 					tags: []
 				},
-				quizzes: []
+				quizzes: [],
+				reason: ''
 			};
 		},
 		created: function() {
@@ -80,6 +115,69 @@
 				.catch(error => {
 					console.log(error);
 				});
+			},
+			addReport: async function() {
+				if (!this.isReasonValid) {
+					return;
+				}
+
+				const user = JSON.parse(localStorage.getItem('user'));
+				let payload = {
+					uid: user.uid,
+					post_id: this.post.post_id,
+					reason: this.reason
+				};
+
+				ReportService.createReport(payload)
+				.then(response => {
+					console.log(response);
+					this.$bvModal.hide('report-pop-up');
+
+					this.createToast('Đã báo cáo bài viết');
+				})
+				.catch(error => {
+					console.log(error);
+				})
+			},
+			addFavorite: async function() {
+				const user = JSON.parse(localStorage.getItem('user'));
+				let payload = {
+					uid: user.uid,
+					post_id: this.post.post_id
+				};
+
+				FavService.createFavorite(payload)
+				.then(response => {
+					console.log(response);
+
+					this.createToast('Đã lưu bài viết');
+				})
+				.catch(error => {
+					console.log(error);
+				})
+			},
+			confimReport: function() {
+				this.$bvModal.show('report-pop-up');
+			},
+			handleOk: function(event) {
+				event.preventDefault();
+				this.addReport();
+			},
+			resetReportForm: function() {
+				this.reason = '';
+			},
+			createToast: function(text, title = 'Thông báo') {
+				this.$bvToast.toast(text, {
+					title: title,
+					autoHideDelay: 3000,
+					append: true,
+					variant: 'info'
+				});
+			}
+		},
+		computed: {
+			isReasonValid: function() {
+				return this.reason.length;
 			}
 		}
 	}
@@ -105,12 +203,16 @@
 	}
 
 	.body {
-		background-color: #cfb997;
+		background-color: #e0c9a6;
 		margin-left: 25%;
 		margin-right: 25%;
 		margin-top: 1%;
 		padding: 20px;
 		border-radius: 20px;
+	}
+
+	.dropdown {
+		float: right;
 	}
 
 	.tags {

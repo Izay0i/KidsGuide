@@ -136,7 +136,7 @@
 		color: #36454f;
 		border: 0;
 		border-radius: 0;
-		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+		border: 2px dashed rgba(0, 0, 0, 0.5);
 		box-shadow: none;
 	}	
 
@@ -145,8 +145,8 @@
 		justify-content: space-evenly;
 		height: auto;
 		padding: 20px;
-		border-radius: 20px;
-		background-color: #cfb997;
+		border-radius: 10px;
+		background-color: #e0c9a6;
 	}
 
 	.form {

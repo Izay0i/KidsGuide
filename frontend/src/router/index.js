@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
+import HomeItem from '@/components/HomeItem.vue';
 import AdminDashboard from '@/components/AdminDashboard.vue';
 import AuthForm from '@/components/AuthForm.vue';
-import Banner from '@/components/Banner.vue';
-import CardCarousel from '@/components/CardCarousel.vue';
 import Faq from '@/components/Faq.vue';
 import Terms from '@/components/Terms.vue';
 import UserProfile from '@/components/UserProfile.vue';
@@ -20,11 +19,8 @@ const routes = [
 	},
 	{
 		path: '/home',
-		name: 'Home',
-		components: {
-			banner: Banner,
-			carousel: CardCarousel
-		}
+		name: 'HomeItem',
+		component: HomeItem
 	},
 	{
 		path: '/faqs',

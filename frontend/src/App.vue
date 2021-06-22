@@ -1,22 +1,18 @@
 <template>
 	<div id="app">
-		<Navbar />
+		<GeneralNavbar v-if="!['HomeItem'].includes($route.name)" />
+
 		<router-view v-bind:key="$route.fullPath" />
-		<router-view name="banner" />
-		<router-view name="carousel" />
-		<Footer />
 	</div>
 </template>
 
 <script>
-	import Navbar from '@/components/Navbar.vue';
-	import Footer from '@/components/Footer.vue';
+	import GeneralNavbar from '@/components/GeneralNavbar.vue';
 
 	export default {
 		name: 'App',
 		components: {
-			Navbar,
-			Footer
+			GeneralNavbar
 		},
 		mounted: function() {
 			this.getUserToken();
@@ -50,18 +46,9 @@
 	}
 
 	body {
-		background-color: #6a92f2 !important;
-	}
-
-	#app {
-		display: flex;
-		flex-direction: column;
-		margin-bottom: 12vh;
-	}
-
-	@media screen and (max-width: 768px) {
-		#app {
-			margin-bottom: 28vh;
-		}	
+		background-image: url('assets/empty-blackboard.jpg');
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: 100% 100%;
 	}
 </style>

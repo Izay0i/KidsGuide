@@ -4,7 +4,6 @@ create table Users(
 	email text not null,
 	password text not null,
 	role text not null default 'user',
-	is_verified boolean not null default false,
 	constraint pk_uid primary key(uid)
 );
 
@@ -37,7 +36,6 @@ create table Posts(
 	vid_url text,
 	post_time timestamp without time zone not null default now(),
 	tags text[],
-	favorites integer not null default 0,
 	constraint pk_post primary key(post_id),
 	constraint fk_uid foreign key(uid) references Users(uid)
 );
@@ -47,7 +45,8 @@ create table Favorites(
 	post_id integer not null,
 	uid integer not null,
 	constraint pk_fav primary key(fav_id),
-	constraint fk_uid foreign key(uid) references Users(uid)
+	constraint fk_uid foreign key(uid) references Users(uid),
+	constraint uniq_post unique(post_id)
 );
 
 create table Quizzes(

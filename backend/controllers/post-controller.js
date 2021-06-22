@@ -61,6 +61,9 @@ const getPostByTitle = (request, response) => {
 		(error, results) => {
 			if (error) throw error;
 
+			results.rows.forEach(row => {
+				row.thumbnail = pathUtil.appendDNToFilePath(request, row.thumbnail);
+			});
 			response.status(200).json(results.rows);
 		}
 	);

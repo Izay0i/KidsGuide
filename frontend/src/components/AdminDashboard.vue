@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<b-navbar variant="dark" class="shadow-lg">
+		<b-navbar variant="primary" class="shadow-lg">
 			<p class="dashboard-text">Bảng điều khiển</p>
 		</b-navbar>
 

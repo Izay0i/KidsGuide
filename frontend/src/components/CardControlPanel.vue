@@ -56,7 +56,7 @@
 					<QuizInputSection v-on:add-question="addQuestion" />
 				</b-form-group>
 
-				<b-card v-if="quizzes.length > 0">
+				<b-card bg-variant="info" v-if="quizzes.length > 0">
 					<b-alert 
 						show 
 						dismissible 
@@ -98,7 +98,8 @@
 				<b-icon icon="search" v-on:click="getPostByTitle"></b-icon>
 			</b-button>
 			<b-form-input 
-				placeholder="Tìm bài viết"
+				placeholder="Tìm bài viết" 
+				class="search" 
 				v-model="search_post"
 				v-on:keyup="getPostByTitle"
 			></b-form-input>
@@ -108,13 +109,7 @@
 			<CardItem 
 				v-for="card in cards" 
 				v-bind:key="card.post_id + card.post_time" 
-				v-bind:prop_id="card.post_id" 
-				v-bind:prop_banner="card.thumbnail" 
-				v-bind:prop_vid="card.vid_url" 
-				v-bind:prop_title="card.title" 
-				v-bind:prop_content="card.content" 
-				v-bind:prop_date="card.post_time" 
-				v-bind:prop_tags="card.tags" 
+				v-bind:prop_obj="card" 
 				v-on:update-card="toggleEditButtons"
 				v-on:delete-card="confirmDeletion"
 			/>			
@@ -365,7 +360,8 @@
 				this.$bvToast.toast(text, {
 					title: title,
 					autoHideDelay: 3000,
-					append: true
+					append: true,
+					variant: 'info'
 				});
 			},
 			formatPostTime: function(arr) {
@@ -434,7 +430,7 @@
 </script>
 
 <style scoped>
-	/* input, input:focus, 
+	input:not(.search), input:focus, 
 	select, select:focus, 
 	textarea, textarea:focus, 
 	.tags, .tags:focus-within
@@ -443,16 +439,16 @@
 		color: #36454f;
 		border: 0;
 		border-radius: 0;
-		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+		border: 2px dashed rgba(0, 0, 0, 0.5);
 		box-shadow: none;
 		margin-bottom: 5px;
-	} */
+	}
 
 	.post-group {
-		border-radius: 20px;
+		border-radius: 10px;
 		padding: 15px;
 		margin: auto;
-		background-color: #cfb997;
+		background-color: #e0c9a6;
 	}
 
 	.thumbnail {
