@@ -23,7 +23,7 @@ const corsOptions = {
 		}
 	},
 	credentials: true,
-	maxAge: 600 //10 minutes
+	//maxAge: 600 //10 minutes
 };
 
 app.use(cors(corsOptions));

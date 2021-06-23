@@ -70,10 +70,8 @@ const getPostByTitle = (request, response) => {
 };
 
 const createPost = (request, response) => {
-	const { id, title, content, tags } = request.body;
+	const { id, title, content, vid_url, tags } = request.body;
 	let thumbnail = request.file.path.replace(/\\/g, '//');
-	let vid_url = request.body.vid_url.replace('watch?v=', 'embed/');
-
 
 	pool.query(
 		`insert into posts (uid, title, content, thumbnail, vid_url, tags) 
@@ -103,17 +101,16 @@ const createPost = (request, response) => {
 	 * @param { integer } post_id - the post ID
 	 * @param { string } title - the post title
 	 * @param { string } content - the post content (or body)
-	 * @param { string } tags - the post tags, is a stringified JSON (must),
+	 * @param { string } tags - the post tags, is a stringified JSON (important),
 	 *							else form-data will parse the array as a string with comma-seperatted elements
 	 *
 	 *The function queries the database for the thumbnail of a post with ID = post_id.
 	 *It then gets the full path of that thumbnail, accesses the subdirectory of that thumbnail,
 	 *and deletes (unlink) that thumbnail.
-	 *Then replace the old thumbnail path with a new one.
+	 *It then replaces the old thumbnail path with a new one.
 	 */
 const updatePost = (request, response) => {
-	const { post_id, title, content, tags } = request.body;
-	let vid_url = request.body.vid_url.replace('watch?v=', 'embed/');
+	const { post_id, title, content, vid_url, tags } = request.body;
 	let thumbnail = '';
 	if (request.file) {
 		thumbnail = request.file.path.replace(/\\/g, '//');

@@ -1,6 +1,6 @@
 <template>
 	<div class="settings shadow-lg">
-		<b-form class=" form w-100 m-5">
+		<b-form class="form w-100 m-5">
 			<b-form-group label="Email:">
 				<b-form-input v-model="user.email"></b-form-input>
 			</b-form-group>

@@ -40,7 +40,10 @@
     export default {
         name: 'CardCarousel',
 		data: function() {
+			const adminID = 1;
+
 			return {
+				adminID,
 				posts: []
 			};
 		},
@@ -49,8 +52,7 @@
 		},
 		methods: {
 			getPostsByUserID: async function() {
-				const adminID = 41;
-				PostService.getPostsByUserID(adminID)
+				PostService.getPostsByUserID(this.adminID)
 				.then(response => {
 					this.posts = response;
 				})

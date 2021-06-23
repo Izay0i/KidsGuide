@@ -18,7 +18,7 @@
 
 				<div class="my-2">
 					<b-form-input 
-						placeholder="Đường dẫn video (Nếu có)" 
+						placeholder="Đường dẫn video (nếu có)" 
 						v-model="card_content.vid_url"
 					></b-form-input>
 
@@ -164,7 +164,7 @@
 			const tagsLimit = 5;
 			return {
 				tagsLimit,
-				img_props: { width: '300px' }, //bind to b-img
+				img_props: { width: '300px', blank: true }, //bind to b-img
 				search_post: '',
 				form_file: null,
 				vid_url_content: {
@@ -254,7 +254,7 @@
 					this.clearInputs();
 					this.getPostsByUserID();
 
-					this.createToast('Thêm thành công');
+					this.createToast('Thêm bài viết thành công');
 				})
 				.catch(error => {
 					console.log(error);
@@ -350,7 +350,7 @@
 					console.log(response);
 					this.deletePost();
 
-					this.createToast('Xóa thành công');
+					this.createToast('Xóa bài viết thành công');
 				})
 				.catch(error => {
 					console.log(error);
@@ -373,10 +373,12 @@
 				const file = event.target.files[0];
 				if (typeof file !== 'undefined') {
 					this.card_content.thumbnail = URL.createObjectURL(file);
+					this.img_props.blank = false;
 				}
 				else {
 					URL.revokeObjectURL(this.card_content.thumbnail);
 					this.card_content.thumbnail = '';
+					this.img_props.blank = true;
 				}
 			},
 			toggleEditButtons: function(id) {
@@ -404,6 +406,7 @@
 
 				URL.revokeObjectURL(this.form_file);
 				this.form_file = null;
+				this.img_props.blank = true;
 			},
 			clearQuizzes: function() {
 				this.quizzes = [];
@@ -460,6 +463,7 @@
 	.thumbnail > :first-child {
 		margin-bottom: 15px;
 		border-radius: 5px;
+		border: 1px dashed black;
 	}
 
 	.search-post {

@@ -8,5 +8,6 @@ router.use(authMiddleware.verifyToken);
 
 router.get('/', reportController.getReports);
 router.post('/', reportController.createReport);
+router.put('/report/:id', reportController.closeReport);
 
 module.exports = router;

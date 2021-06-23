@@ -10,6 +10,10 @@
 					<component v-bind:is="tab.component"></component>
 				</b-tab>
 
+				<b-tab title="Bài viết đã lưu" v-if="isParamUserID">
+					<UserFavorites />
+				</b-tab>
+
 				<b-tab title="Tùy chỉnh" v-if="isParamUserID">
 					<UserSettings />
 				</b-tab>
@@ -24,10 +28,12 @@
 	import UserInfo from '@/components/UserInfo.vue';
 	import CardControlPanel from '@/components/CardControlPanel.vue';
 	import UserSettings from '@/components/UserSettings.vue';
+	import UserFavorites from '@/components/UserFavorites.vue';
 
 	export default {
 		namer: 'UserProfile',
 		components: {
+			UserFavorites,
 			UserSettings
 		},
 		data: function() {

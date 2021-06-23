@@ -1,8 +1,14 @@
 <template>
-	<div>
+	<div class="parent">
+		<b-img 
+			class="pin" 
+			src="../assets/pin_needle.png" 
+			v-if="!['UserProfile'].includes($route.name)"
+		></b-img>
+
 		<b-card class="cards mx-auto shadow-lg">
 			<b-dropdown 
-				variant="light" 
+				variant="white" 
 				size="sm" 
 				right 
 				class="dropdown" 
@@ -25,9 +31,10 @@
 				v-bind:to="{ name: 'Post', params: { id: card_content.post_id } }"
 			>
 				<b-icon 
+					variant="danger" 
 					icon="play-btn-fill" 
 					class="icon" 
-					v-if="card_content.vid"
+					v-if="card_content.vid_url"
 				></b-icon>
 				
 				<b-img v-bind:src="card_content.thumbnail" fluid-grow></b-img>
@@ -104,11 +111,23 @@
 		border-radius: 10px 10px 0 0;
 	}
 
+	.parent {
+		z-index: 9999;
+		position: relative;
+	}
+
+	.pin {
+		z-index: 10001;
+		position: absolute;
+		transform: scale(0.22) translate(-195%, -200%);
+	}
+
 	.link {
 		position: relative;
 	}
 
-	.link .icon {
+	.icon {
+		z-index: 10000;
 		position: absolute;
 		transform: scale(1.5) translate(50%, 50%);
 	}
@@ -128,6 +147,8 @@
 
 	.dropdown {
 		float: right;
+		border-radius: 5px;
+		border: 2px dashed rgba(0, 0, 0, 0.5);
 	}
 
 	.title {

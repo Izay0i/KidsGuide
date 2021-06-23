@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-jumbotron header="Các câu hỏi thường gặp" class="w-75 m-auto">
+        <b-jumbotron header="Các câu hỏi thường gặp" class="body">
             <b-img thumbnail fluid src="@/assets/book.png" alt="Logo"></b-img>
             
             <hr/>
@@ -42,6 +42,13 @@
 </script>
 
 <style scoped>
+	.body {
+		margin-top: 1%;
+		margin-left: auto;
+		margin-right: auto;
+		width: 75%;
+	}
+
 	.question {
 		font-weight: bold;
 		color: blueviolet;
@@ -49,5 +56,11 @@
 
 	.answer {
 		white-space: pre-wrap;
+	}
+
+	@media screen and (max-width: 414px) {
+		.body {
+			width: 100%;
+		}
 	}
 </style>

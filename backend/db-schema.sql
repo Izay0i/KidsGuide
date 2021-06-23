@@ -45,8 +45,7 @@ create table Favorites(
 	post_id integer not null,
 	uid integer not null,
 	constraint pk_fav primary key(fav_id),
-	constraint fk_uid foreign key(uid) references Users(uid),
-	constraint uniq_post unique(post_id)
+	constraint fk_uid foreign key(uid) references Users(uid)
 );
 
 create table Quizzes(
@@ -63,5 +62,6 @@ create table Reports(
 	post_id integer not null,
 	reason text not null,
 	report_time timestamp without time zone not null default now(),
+	open boolean not null default true,
 	constraint pk_report primary key(report_id)
 );

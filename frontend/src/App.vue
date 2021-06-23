@@ -1,20 +1,39 @@
 <template>
 	<div id="app">
-		<GeneralNavbar v-if="!['HomeItem'].includes($route.name)" />
+		<transition name="fade" mode="out-in">
+			<template v-if="!app_loaded">
+				<LoadingScreen />
+			</template>
+		</transition>
+		
+		<template v-if="app_loaded">
+			<GenericNavbar v-if="!['HomeItem'].includes($route.name)" />
 
-		<router-view v-bind:key="$route.fullPath" />
+			<router-view v-bind:key="$route.fullPath" />
+		</template>
 	</div>
 </template>
 
 <script>
-	import GeneralNavbar from '@/components/GeneralNavbar.vue';
+	import LoadingScreen from '@/components/LoadingScreen.vue';
+	import GenericNavbar from '@/components/GenericNavbar.vue';
 
 	export default {
 		name: 'App',
 		components: {
-			GeneralNavbar
+			LoadingScreen,
+			GenericNavbar
+		},
+		data: function() {
+			return {
+				app_loaded: false
+			};
 		},
 		mounted: function() {
+			setTimeout(() => {
+				this.app_loaded = true;
+			}, 3000);
+
 			this.getUserToken();
 		},
 		methods: {
@@ -46,9 +65,17 @@
 	}
 
 	body {
-		background-image: url('assets/empty-blackboard.jpg');
+		background-image: url('assets/empty_blackboard.jpg');
 		background-repeat: no-repeat;
 		background-attachment: fixed;
 		background-size: 100% 100%;
+	}
+
+	.fade-enter-active, .fade-leave-active {
+		transition: opacity .3s;
+	}
+	
+	.fade-enter, .fade-leave-to {
+		opacity: 0;
 	}
 </style>

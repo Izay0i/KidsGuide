@@ -56,19 +56,22 @@ const updateImage = (request, response) => {
 				'select avatar from userdetails where uid = $1;', 
 				[id]
 			);
-			const avatarDir = path.resolve(results.rows[0].avatar);
+			
+			if (results.rows[0].avatar) {
+				const avatarDir = path.resolve(results.rows[0].avatar);
 
-			//if the avatar has been deleted or is an url then skip the deletion
-			fs.access(avatarDir, (error) => {
-				if (error) {
-					console.log(error);
-				}
-				else {
-					fs.unlink(avatarDir, (error) => {
-						if (error) throw error;
-					});
-				}
-			});
+				//if the avatar has been deleted or is an url then skip the deletion
+				fs.access(avatarDir, (error) => {
+					if (error) {
+						console.log(error);
+					}
+					else {
+						fs.unlink(avatarDir, (error) => {
+							if (error) throw error;
+						});
+					}
+				});
+			}
 
 			results = await client.query(
 				'update userdetails set avatar = $1 where uid = $2;',

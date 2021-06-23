@@ -1,8 +1,11 @@
 const pool = require('../db-connection.js');
 
 const getReports = (request, response) => {
+	const open_status = request.query.open;
+
 	pool.query(
-		'select * from reports order by report_id desc;',
+		'select * from reports where open = $1 order by report_id desc;',
+		[open_status],
 		(error, results) => {
 			if (error) throw error;
 
@@ -27,7 +30,22 @@ const createReport = (request, response) => {
 	);
 };
 
+const closeReport = (request, response) => {
+	const report_id = parseInt(request.params.id);
+
+	pool.query(
+		'update reports set open = FALSE where report_id = $1;',
+		[report_id],
+		(error, results) => {
+			if (error) throw error;
+
+			response.status(200).send(`Closed report with ID: ${report_id}`);
+		}
+	);
+}
+
 module.exports = {
 	getReports,
-	createReport
+	createReport,
+	closeReport
 };

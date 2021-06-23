@@ -1,6 +1,6 @@
 <template>
 	<div v-if="prop_quizzes.length > 0">
-		<b-form class="quizz shadow-lg">
+		<b-form class="quizz">
 			<p> Trắc nghiệm </p>
 
 			<div v-show="!isEndOfQuiz">
@@ -101,6 +101,7 @@
 		padding: 20px;
 		margin-bottom: 15px;
 		border-radius: 10px;
+		border: 2px dashed rgba(0, 0, 0, 0.5);
 	}
 
 	.response-btns {

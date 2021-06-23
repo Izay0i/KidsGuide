@@ -23,9 +23,16 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		margin-top: 30px;
 	}
 
 	div * {
 		margin-bottom: 30px;
+	}
+
+	@media screen and (max-width: 540px) {
+		div {
+			margin-top: 0;
+		}
 	}
 </style>

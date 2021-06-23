@@ -2,10 +2,11 @@
 	<div>
 		<div class="body shadow-lg">
 			<b-dropdown 
-				variant="light"
+				variant="white" 
 				size="sm" 
 				right 
-				class="dropdown"
+				class="dropdown" 
+				v-if="user.avatar"
 			>
 				<b-dropdown-item v-on:click="addFavorite">
 					<b-icon variant="warning" icon="bookmark"></b-icon> &nbsp; Lưu bài viết
@@ -31,8 +32,21 @@
 				v-bind:src="post.vid_url"
 			></b-embed>
 
-			<p>Ngày đăng: {{ post.post_time }}</p>
-			<p>{{ post.content }}</p>
+			<div class="date-user">
+				<p>Ngày đăng: {{ post.post_time }}</p>
+
+				<div class="user">
+					<p>Người đăng: {{ user.name }}</p>
+					<b-avatar 
+						class="profile-btn" 
+						v-if="user.avatar" 
+						v-bind:to="{ name: 'UserProfile', params: { id: post.uid } }" 
+						v-bind:src="user.avatar"
+					></b-avatar>
+				</div>
+			</div>
+
+			<p class="content">{{ post.content }}</p>
 
 			<QuizDisplay v-bind:prop_quizzes="quizzes" />
 
@@ -43,6 +57,15 @@
 			>
 				{{ tag }}
 			</b-badge>
+
+			<b-card 
+				no-body 
+				class="card" 
+				v-if="fav_count > 0"
+			>
+				<b-icon variant="warning" icon="bookmark-fill"></b-icon>
+				&nbsp; {{ fav_count }} người đã lưu bài viết này
+			</b-card>
 		</div>
 
 		<b-modal 
@@ -55,7 +78,8 @@
 			v-on:hidden="resetReportForm"
 		>
 			<b-form v-on:submit.stop.prevent="addReport">
-				<b-form-group label="Lý do:">
+				<b-form-group label="Lý do (phải trên 10 từ):">
+					<p> {{ reason.length }} </p>
 					<b-form-input required v-model="reason"></b-form-input>
 				</b-form-group>
 			</b-form>
@@ -69,6 +93,7 @@
 	import QuizDisplay from '@/components/QuizDisplay.vue';
 
 	import PostService from '@/services/PostService.js';
+	import UserService from '@/services/UserService.js';
 	import QuizService from '@/services/QuizService.js';
 	import ReportService from '@/services/ReportService.js';
 	import FavService from '@/services/FavService.js';
@@ -81,6 +106,7 @@
 		data: function() {
 			return {
 				post: {
+					uid: -1,
 					title: '',
 					content: '',
 					thumbnail: '',
@@ -88,6 +114,8 @@
 					post_time: '',
 					tags: []
 				},
+				user: {},
+				fav_count: 0,
 				quizzes: [],
 				reason: ''
 			};
@@ -95,22 +123,46 @@
 		created: function() {
 			this.getPostByID();
 			this.getQuizByPostID();
+			this.getFavCountByPostID();
 		},
 		methods: {
 			getPostByID: async function() {
 				PostService.getPostByID(this.$route.params.id)
 				.then(response => {
+					//needs to be an embed
+					//trims channel name query
+					response.vid_url = response.vid_url.replace('watch?v=', 'embed/').split('&')[0];
 					response.post_time = moment(response.post_time).format('DD/MM/YYYY hh:mm A');
 					this.post = response;
+
+					this.getUserByID(response.uid);
 				})
 				.catch(error => {
 					console.log(error);
 				})
 			},
+			getUserByID: async function(id) {
+				UserService.getUserByID(id)
+				.then(response => {
+					this.user = response;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
 			getQuizByPostID: async function() {
 				QuizService.getQuizByPostID(this.$route.params.id)
 				.then(response => {
 					this.quizzes = response.content;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+			},
+			getFavCountByPostID: async function() {
+				FavService.getFavCountByPostID(this.$route.params.id)
+				.then(response => {
+					this.fav_count = response;
 				})
 				.catch(error => {
 					console.log(error);
@@ -177,7 +229,7 @@
 		},
 		computed: {
 			isReasonValid: function() {
-				return this.reason.length;
+				return this.reason.length >= 10;
 			}
 		}
 	}
@@ -198,7 +250,6 @@
 	}
 
 	p {
-		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
 		white-space: pre-wrap;
 	}
 
@@ -213,10 +264,46 @@
 
 	.dropdown {
 		float: right;
+		border-radius: 5px;
+		border: 2px dashed rgba(0, 0, 0, 0.5);
+	}
+
+	.date-user {
+		display: flex;
+		justify-content: space-between;
+		border-bottom: 2px dashed rgba(0, 0, 0, 0.5);
+		margin-top: 20px;
+		margin-bottom: 20px;
+		padding-bottom: 7px;
+	}
+
+	.user {
+		display: flex;
+	}
+
+	.user > :first-child {
+		margin-right: 20px;
+	}
+
+	.content {
+		border-bottom: 2px dashed rgba(0, 0, 0, 0.5);
+		padding-bottom: 7px;
 	}
 
 	.tags {
 		margin-right: 5px;
+		margin-bottom: 10px;
+	}
+
+	.card {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 7px;
+	}
+
+	.card * {
+		margin-right: 10px;
 	}
 
 	@media screen and (max-width: 1024px) {

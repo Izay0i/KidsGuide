@@ -1,5 +1,5 @@
 <template>
-	<div class="quiz-group shadow-lg">
+	<div class="quiz-group">
 		<b-form>
 			<b-form-input 
 				placeholder="Câu hỏi" 
@@ -130,15 +130,16 @@
 		color: #36454f;
 		border: 0;
 		border-radius: 0;
-		border: 2px dashed rgba(0, 0, 0, 0.5);
+		border: 2px dotted rgba(0, 0, 0, 0.5);
 		box-shadow: none;
 		margin-bottom: 5px;
 	}
 
 	.quiz-group {
-		border-radius: 10px;
+		border-radius: 5px;
+		border: 2px dashed rgba(0, 0, 0, 0.5);
+		margin-top: 5px;
 		padding: 15px;
-		margin: auto;
 		background-color: #e0c9a6;
 	}
 	

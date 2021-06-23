@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<b-navbar>
+		<b-navbar class="navbar">
 			<b-nav class="nav-items">
 				<b-nav-item v-bind:to="{ name: 'HomeItem' }">
 					Trang chủ
@@ -68,6 +68,10 @@
 </script>
 
 <style scoped>
+	/* .navbar {
+		background-color: rgba(255, 255, 255, 0.2);
+	} */
+
 	.nav-items {
 		margin-left: auto;
 		margin-right: auto;

@@ -115,6 +115,7 @@
 		background-image: url('../assets/blackboard.jpg');
 		background-repeat: no-repeat;
 		background-attachment: local;
+		background-position: center;
 		background-size: 100% 100%;
 	}
 
