@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const history = require('connect-history-api-fallback');
 const app = express();
-const port = process.env.PORT || 443;
+const port = process.env.PORT || 80;
 
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
