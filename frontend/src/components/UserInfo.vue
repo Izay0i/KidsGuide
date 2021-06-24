@@ -1,7 +1,7 @@
 <template>
 	<div class="profile shadow-lg">
 		<div class="avatar-frame">
-			<b-img class="tape" src="../assets/tape.png"></b-img>
+			<b-img class="tape" src="../assets/duct_tape.png"></b-img>
 			
 			<b-avatar 
 				rounded 
@@ -133,7 +133,7 @@
 						avatar: response.avatar
 					}));
 					
-					router.go(0);
+					this.getUserDetails();
 				})
 				.catch(error => {
 					console.log(error);
