@@ -13,9 +13,10 @@ const Pool = require('pg').Pool;
 // });
 
 /*or use a connection string (ElephantSQL)*/ 
-const connectionString = process.env.DB_URL;
+const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({
-	connectionString
+	connectionString,
+	ssl: true
 });
 
 module.exports = pool;
