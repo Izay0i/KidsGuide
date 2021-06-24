@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const history = require('connect-history-api-fallback');
 const app = express();
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
@@ -14,7 +14,7 @@ const faqRouter = require('./routes/faq');
 const imageRouter = require('./routes/image');
 const favRouter = require('./routes/favorite');
 
-const whiteList = ['http://localhost:8080', 'http://localhost:3000', 'https://www.youtube.com'];
+const whiteList = ['http://localhost:8080', 'http://localhost:3000', 'https://kynangsong.herokuapp.com', 'https://www.youtube.com'];
 const corsOptions = {
 	origin: function (origin, callback) {
 		if (whiteList.includes(origin) || !origin) { //!origin allows REST tools and server2server interaction
