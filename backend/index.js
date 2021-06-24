@@ -14,7 +14,7 @@ const faqRouter = require('./routes/faq');
 const imageRouter = require('./routes/image');
 const favRouter = require('./routes/favorite');
 
-const whiteList = ['http://localhost:8080', 'http://localhost:3000', 'https://www.youtube.com'];
+const whiteList = ['http://localhost:8080', 'http://localhost:3000', 'https://kynangsong.herokuapp.com', 'https://www.youtube.com'];
 const corsOptions = {
 	origin: function (origin, callback) {
 		if (whiteList.includes(origin) || !origin) { //!origin allows REST tools and server2server interaction

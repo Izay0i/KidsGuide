@@ -18,6 +18,7 @@
 						v-bind:to="{ name: 'Post', params: { id: post.post_id } }"
 					>
 						<b-icon 
+							variant="danger" 
 							icon="play-btn-fill" 
 							class="icon" 
 							v-if="post.vid_url"

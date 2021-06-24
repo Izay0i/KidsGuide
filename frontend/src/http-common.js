@@ -3,7 +3,7 @@ import { authHeader } from '@/services/AuthHeader';
 
 export default axios.create({
 	baseURL: '/',
-	timeout: 1000,
+	timeout: 30000,
 	headers: {
 		'Authorization': 'Bearer ' + authHeader(),
 		'Content-type': 'application/json'
