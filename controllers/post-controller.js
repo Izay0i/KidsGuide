@@ -24,7 +24,7 @@ const getPostsByUserID = (request, response) => {
 		'select * from posts where uid = $1 order by post_id desc;',
 		[id],
 		(error, results) => {
-			if (error) console.log(error);
+			if (error) throw error;
 
 			results.rows.forEach(row => {
 				row.thumbnail = pathUtil.appendDNToFilePath(request, row.thumbnail);
