@@ -36,7 +36,7 @@
 			<b-form-input 
 				placeholder="Tìm câu hỏi"
 				v-model="search_faq"
-				v-on:keyup="getFaqByQuestion"
+				v-on:keyup.enter="getFaqByQuestion"
 			></b-form-input>
 		</div>
 

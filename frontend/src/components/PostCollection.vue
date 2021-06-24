@@ -7,7 +7,7 @@
 			<b-form-input 
 				placeholder="Tìm bài viết" 
 				v-model="search_post" 
-				v-on:keyup="getPostByTitle"
+				v-on:keyup.enter="getPostByTitle"
 			></b-form-input>
 		</div>
 

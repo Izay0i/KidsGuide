@@ -101,7 +101,7 @@
 				placeholder="Tìm bài viết" 
 				class="search" 
 				v-model="search_post"
-				v-on:keyup="getPostByTitle"
+				v-on:keyup.enter="getPostByTitle"
 			></b-form-input>
 		</div>
 
