@@ -8,7 +8,8 @@ Website: https://kynangsong.herokuapp.com
 	+ npm run `build`
 	+ copy `dist` folder to `backend`
 	+ cd `backend`
-	+ npm run `start`
+	+ npm run `start`	
+	+ or clone the `production` branch
 
 + Previews:
 ![preview_1](/previews/preview_1.png)
